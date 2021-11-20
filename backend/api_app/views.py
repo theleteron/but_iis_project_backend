@@ -1,4 +1,5 @@
 from django.contrib.auth import login
+from django.shortcuts import get_object_or_404;
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions
@@ -22,7 +23,7 @@ class LibraryViews(APIView):
     
     def get(self, request, id=None):
         if id:
-            item = Library.objects.get(id=id)
+            item = get_object_or_404(Library, pk=id)
             serializer = LibrarySerializer(item)
             return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
         

@@ -1,5 +1,7 @@
 Django==3.2.9
 djangorestframework==3.12.4
 django-rest-knox==4.1.0
-drf-yasg[validation]
+drf-yasg
+django-filter
+markdown
 psycopg2-binary==2.9.1
