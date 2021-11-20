@@ -44,6 +44,16 @@ INSTALLED_APPS = [
     'api_app',
 ]
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS' : {
+        "Authorization token (get through auth/login)" : {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
