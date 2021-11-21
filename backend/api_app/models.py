@@ -4,15 +4,61 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 ###
 #   DATABASE STRUCTURE
 ###
-# Library table
 
 class Library(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    name                = models.CharField(max_length=255)
+    description         = models.CharField(max_length=255)
     # Address
-    city = models.CharField(max_length=255)
-    street = models.CharField(max_length=255)
-    zip_code = models.IntegerField()
+    city                = models.CharField(max_length=255)
+    street              = models.CharField(max_length=255)
+    zip_code            = models.IntegerField()
+
+class Publication(models.Model):
+    name                = models.CharField(max_length=50)
+    series              = models.CharField(max_length=50)
+    synopsis            = models.CharField(max_length=255)
+    authors             = models.CharField(max_length=255)
+    language            = models.CharField(max_length=50)
+    ISBN                = models.CharField(max_length=20, unique=True)
+    date_of_publication = models.DateTimeField()
+    publisher           = models.CharField(max_length=50)
+    genre               = models.CharField(max_length=50)
+    pages               = models.IntegerField()
+    tags                = models.CharField(max_length=255)
+    rating              = models.FloatField()
+
+class Book(models.Model):
+    STATES = (
+        (1, "New"),
+        (2, "Used"),
+        (3, "Damaged"),
+    )
+    publication         = models.ForeignKey('Publication', on_delete=models.CASCADE)
+    library             = models.ForeignKey('Library', on_delete=models.CASCADE)
+    condition           = models.CharField(max_length=30, choices=STATES, default=1)
+    section             = models.IntegerField()
+    loaned              = models.BooleanField(default=False)
+
+class PublicationOrder(models.Model):
+    publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
+    user                = models.ForeignKey('Account', on_delete=models.RESTRICT)
+    date_of_order       = models.DateTimeField(auto_now_add=True)
+    delivered           = models.BooleanField(default=False)
+    price               = models.FloatField()
+
+class BookOrder(models.Model):
+    publication_order   = models.ForeignKey('PublicationOrder', on_delete=models.CASCADE)
+    number_of_books     = models.IntegerField()
+    price_per_book      = models.FloatField()
+
+class BookLoan(models.Model):
+    user                = models.ForeignKey('Account', on_delete=models.RESTRICT)
+    date_from           = models.DateTimeField()
+    date_to             = models.DateTimeField()
+    extension_to        = models.DateTimeField()
+    fine                = models.FloatField(default=0)
+    books               = models.ManyToManyField(Book)
+
 
 ###
 #   USER DATA & MANAGMENT
@@ -93,7 +139,7 @@ class Account(AbstractBaseUser):
         (4, "Administrator"),
     )
     role            = models.CharField(verbose_name="role", max_length=30, choices=ROLE_OPTIONS, default=1)
-    working_at      = models.ForeignKey(Library, null=True, on_delete=models.RESTRICT)
+    working_at      = models.ForeignKey('Library', null=True, on_delete=models.RESTRICT)
     # Other details & flags
     date_joined     = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
     last_login      = models.DateTimeField(verbose_name="last login", auto_now=True)
