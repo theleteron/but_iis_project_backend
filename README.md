@@ -6,7 +6,7 @@ To run this project you will need `docker`.
 ### Run
 To setup this API & database you first have to prepare `.env.prod` file.  
 Example of `.env` file (without comments - text after #)
-```
+```bash
 DEBUG=1                                             # Django that we want to display detailed errors (dev env)
 SECRET_KEY=foo                                      # Secret key
 DJANGO_ALLOWED_HOSTS="localhost 127.0.0.1 [::1]"    # Accept connection from
@@ -20,7 +20,18 @@ DATABASE=postgres
 ```
 Modify `docker-compose.yml` with your `.env` file, change POSTGRES enviroment variables, if needed change ports that are used and setup mount points for `static_volume` & `media_volume`.
   
-After this you can use  
-> `docker-compose up -d --build` **→** to build image and start it  
-> `docker-compose exec python manage.py makemigrations` **→** to prepare database models (should not be necessary, check `backend/api_app/migrations`)  
-> `docker-compsoe exec python manage.py migrate` **→** to apply prepared models  
+After this you can use
+#### Build image and start it 
+```bash
+$ docker-compose up -d --build
+``` 
+#### Prepare database models (should not be necessary, check `backend/api_app/migrations`) 
+```bash
+$ docker-compose exec python manage.py makemigrations
+```
+#### Apply prepared models to database
+```bash
+$ docker-compsoe exec python manage.py migrate
+```
+### Use
+Now you can check `localhost:<port>/api` to see if the API is up and running. You should see Swagger documentation.
