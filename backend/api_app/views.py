@@ -1,11 +1,9 @@
-from django.contrib.auth import login
 from django.shortcuts import get_object_or_404;
+from rest_framework import status, generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics, permissions
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.models import AuthToken
-from knox.views import LoginView as KnoxLoginView
+from .permissions import IsAdministrator, IsDistributor, IsLibrarian, IsRegistredReader
 from .serializers import LibrarySerializer, UserSerializer, LoginSerializer, RegisterSerializer
 from .models import Library
 
