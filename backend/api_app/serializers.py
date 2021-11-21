@@ -1,7 +1,7 @@
-from django.db.models import fields
 from rest_framework import serializers
 from .models import Library
 from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
 
 User = get_user_model()
 
@@ -23,7 +23,32 @@ class LibrarySerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email')
+        fields = (
+                'id',
+                'username',
+                'email', 
+                'first_name', 
+                'last_name', 
+                'city', 
+                'street', 
+                'zip_code', 
+                'country', 
+                'phone', 
+                'role', 
+                'working_at', 
+                'date_joined', 
+                'last_login'
+            )
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(**data)
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Invalid Details.")
 
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):

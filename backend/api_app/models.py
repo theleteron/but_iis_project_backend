@@ -19,7 +19,7 @@ class Library(models.Model):
 ###
 
 class AccountManager(BaseUserManager):
-    def create_user(self, email, username, first_name, last_name, city, street, zip_code, country, password = None):
+    def create_user(self, username, email, first_name, last_name, city, street, zip_code, country, password = None):
         if not email:
             raise ValueError("Users must have an email address")
         if not username:
@@ -38,8 +38,8 @@ class AccountManager(BaseUserManager):
             raise ValueError("Users must have an country")
         
         user = self.model(
-                email=self.normalize_email(email),
                 username=username,
+                email=self.normalize_email(email),
                 first_name=first_name,
                 last_name=last_name,
                 city=city,
@@ -53,10 +53,10 @@ class AccountManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, username, first_name, last_name, city, street, zip_code, country, password = None):
+    def create_superuser(self, username, email, first_name, last_name, city, street, zip_code, country, password = None):
         user = self.create_user(
-                email=self.normalize_email(email),
                 username=username,
+                email=self.normalize_email(email),
                 first_name=first_name,
                 last_name=last_name,
                 city=city,

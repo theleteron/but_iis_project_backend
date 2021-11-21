@@ -3,7 +3,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from knox import views as knox_views
-from .views import LibraryViews, RegisterAPI, LoginAPI
+from .views import LibraryViews, UserAPI, RegisterAPI, LoginAPI
 
 # API Open Documentation
 schema_view = get_schema_view(
@@ -15,7 +15,7 @@ schema_view = get_schema_view(
       contact=openapi.Contact(email="api@iis.czleteron.net"),
       license=openapi.License(name=""),
    ),
-   url='https://iis.czleteron.net/api/',
+   #url='https://iis.czleteron.net/api/',
    public=True,
    permission_classes=[permissions.AllowAny],
 )
@@ -29,6 +29,7 @@ urlpatterns = [
     path('auth/login/', LoginAPI.as_view()),
     path('auth/logout/', knox_views.LogoutView.as_view()),
     path('auth/logoutall/', knox_views.LogoutAllView.as_view()),
+    path('auth/user/', UserAPI.as_view()),
     # LibraryIS API
     path('library/', LibraryViews.as_view()),
     path('library/<int:id>', LibraryViews.as_view())
