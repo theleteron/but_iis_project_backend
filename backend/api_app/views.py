@@ -294,11 +294,11 @@ userDeleteResponses = {
 }
 @swagger_auto_schema(
     tags=["User"], 
-    method="POST", 
+    method="DELETE", 
     operation_description="Deletes user",
     responses=userDeleteResponses
 )
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteUser(request):
     user = Account.objects.get(email=request.user.email)
@@ -318,11 +318,11 @@ def deleteUser(request):
 ## Delete Specified User
 @swagger_auto_schema(
     tags=["User"], 
-    method="POST", 
+    method="DELETE", 
     operation_description="Allows user with Administrator permission to delete specified user",
     responses=userDeleteResponses
 )
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([And(IsAuthenticated, IsAdministrator)])
 def deleteUserByID(request, id):
     user = Account.objects.get(id=id)
