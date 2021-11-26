@@ -70,8 +70,6 @@ All endpoints are prefixed by `/api` -> full endpoint address is then `<your_dom
 | `POST`       	| `/publication/create/`             	| Creates new publication                                                                                                                       	| IsAdministrator \|\| IsLibrarian \|\| IsDistributor 	| :heavy_check_mark:    |
 | `PUT`      	| `/publication/update/<int:id>/`      	| Update Publication - for fixing information or supplying new                                                                                  	| IsAdministrator \|\| IsLibrarian \|\| IsDistributor 	|                    	|
 | `PUT`      	| `/publication/<int:id>/associate/` 	| Adds Publication specified by `<int:id>` to the Library (Library is taken from user object if user is Librarian, else it has to be specified) 	| IsAdministrator \|\| IsLibrarian                    	|                    	|
-|              	|                                    	|                                                                                                                                               	|                                                     	|                    	|
-|              	|                                    	|                                                                                                                                               	|                                                     	|                    	|
 ### Order
 | Request type | API Endpoint                                         | Description                                                                                               | Permission                                          | Implemented |
 |--------------|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|-----------------------------------------------------|-------------|
@@ -82,7 +80,21 @@ All endpoints are prefixed by `/api` -> full endpoint address is then `<your_dom
 | `GET`        | `/order/delivered/<bool:delivered>`                  | Returns list of all orders from the library specified by `<int:id>`, that have been delivered/undelivered | IsAdministrator \|\| IsLibrarian \|\| IsDistributor |             |
 | `GET`        | `/order/library/<int:id>/delivered/<bool:delivered>` | Returns list of all orders made by the user specified by `<int:id>`, that have been delivered/undelivered | IsAdministrator \|\| IsLibrarian \|\| IsDistributor |             |
 | `POST`       | `/order/create/`                                     | Creates a new order                                                                                       | IsAdministrator \|\| IsLibrarian                    |             |
-| `PUT`        | `/order/update/<int:id>`                             | Update order - for marking as delivered                                                                   | IsAdministrator \|\| IsDistributor                  |             |
+| `PUT`        | `/order/update/<int:id>`                             | Update order - for marking the order specified by `<int:id>` as delivered                                                                   | IsAdministrator \|\| IsDistributor                  |             |
 ### Book
-
-### BookLoan
+| Request type | API Endpoint             | Description                                                                                                  | Permission                       | Implemented |
+|--------------|--------------------------|--------------------------------------------------------------------------------------------------------------|----------------------------------|-------------|
+| `GET`        | `/book/`                 | Returns list of all books in the system                                                                      | IsAdministrator \|\| IsLibrarian |             |
+| `GET`        | `/book/<int:id>`         | Returns book specified by `<int:id>`                                                                         | IsAdministrator \|\| IsLibrarian |             |
+| `GET`        | `/book/library/<int:id>` | Returns list of all books from the library specified by `<int:id>`                                           | IsAdministrator \|\| IsLibrarian |             |
+| `POST`       | `/book/create/`          | Adds a new book                                                                                             | IsAdministrator \|\| IsLibrarian |             |
+| `PUT`        | `/book/update/<int:id>`  | Update book - for changing condition, loaned status or fixing information of the book specified by <int:id>  | IsAdministrator \|\| IsLibrarian |             |
+### Book Loan
+| Request type | API Endpoint                     | Description                                                                            | Permission                       | Implemented |
+|--------------|----------------------------------|----------------------------------------------------------------------------------------|----------------------------------|-------------|
+| `GET`        | `/book_loan/`                    | Returns list of all book loans in the system                                           | IsAdministrator \|\| IsLibrarian |             |
+| `GET`        | `/book_loan/<int:id>`            | Returns book loan specified by `<int:id>`                                              | IsAdministrator \|\| IsLibrarian |             |
+| `GET`        | `/book_loan/library/<int:id>`    | Returns list of all book loans from the library specified by `<int:id>`                | IsAdministrator \|\| IsLibrarian |             |
+| `POST`       | `/book_loan/create/`             | Registered user or an employee creates a new book loan                                 | IsAuthenticated                  |             |
+| `POST`       | `/book_loan/create/unregistered` | Unregistered user creates a new book loan                                              | AllowAny                         |             |
+| `PUT`        | `/book_loan/update/<int:id>`     | Update book loan - for updating information about the book loan specified by <int:id>  | IsAdministrator \|\| IsLibrarian |             |
