@@ -87,7 +87,7 @@ All endpoints are prefixed by `/api` -> full endpoint address is then `<your_dom
 | `GET`        | `/book/`                 | Returns list of all books in the system                                                                      | IsAdministrator \|\| IsLibrarian |             |
 | `GET`        | `/book/<int:id>`         | Returns book specified by `<int:id>`                                                                         | IsAdministrator \|\| IsLibrarian |             |
 | `GET`        | `/book/library/<int:id>` | Returns list of all books from the library specified by `<int:id>`                                           | IsAdministrator \|\| IsLibrarian |             |
-| `POST`       | `/book/create/`          | Adds a new book                                                                                             | IsAdministrator \|\| IsLibrarian |             |
+| `POST`       | `/book/create/`          | Adds a new book                                                                                              | IsAdministrator \|\| IsLibrarian |             |
 | `PUT`        | `/book/update/<int:id>`  | Update book - for changing condition, loaned status or fixing information of the book specified by <int:id>  | IsAdministrator \|\| IsLibrarian |             |
 ### Book Loan
 | Request type | API Endpoint                     | Description                                                                            | Permission                       | Implemented |
