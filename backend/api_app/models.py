@@ -42,6 +42,7 @@ class Book(models.Model):
 
 class PublicationOrder(models.Model):
     publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
+    library             = models.ForeignKey('Library', on_delete=models.RESTRICT)
     user                = models.ForeignKey('Account', on_delete=models.RESTRICT)
     date_of_order       = models.DateTimeField(auto_now_add=True)
     delivered           = models.BooleanField(default=False)

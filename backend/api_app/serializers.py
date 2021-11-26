@@ -53,6 +53,7 @@ class BookSerializer(serializers.ModelSerializer):
 # PublicationOrder Serializer
 class PublicationOrderSerializer(serializers.ModelSerializer):
     publication         = serializers.PrimaryKeyRelatedField(read_only=True)
+    library             = serializers.PrimaryKeyRelatedField(read_only=True)
     user                = serializers.PrimaryKeyRelatedField(read_only=True)
     date_of_order       = serializers.DateTimeField()
     delivered           = serializers.BooleanField(default=False)
