@@ -4,8 +4,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from knox import views as knox_views
-from .views import UserLogin, UserRegistration, associateLibrarianToLibrary, createLibrary, createPublication, deleteUser, deleteUserByID, getLibrary, getPublication, getUser, getUserByID, editUser, editUserByID, \
-                   getAllUsers
+from .views import UserLogin, UserRegistration, associateLibrarianToLibrary, associatePublicationWithLibrary, createLibrary, createPublication, deleteUser, deleteUserByID, getLibrary, getPublication, getUser, getUserByID, editUser, editUserByID, \
+                   getAllUsers, makeAdministrator, makeAdministratorUsingKey, makeDistributor, makeLibrarian, updatePublication, makeRegistredUser
 
 # API Open Documentation
 schema_view = get_schema_view(
@@ -58,13 +58,19 @@ urlpatterns = [
     path('auth/logout/', knox_logout),
     path('auth/logoutall/', knox_logoutAll),
     path('auth/register/', UserRegistration),
+    # Admin
+    path('admin/setrole/administrator/', makeAdministratorUsingKey),
+    path('admin/setrole/<int:id>/administrator/', makeAdministrator),
+    path('admin/setrole/<int:id>/librarian/', makeLibrarian),
+    path('admin/setrole/<int:id>/distributor/', makeDistributor),
+    path('admin/setrole/<int:id>/registred/', makeRegistredUser),
     # User
     path('user/', getUser),
     path('user/<int:id>/', getUserByID),
     path('user/edit/', editUser),
-    path('user/edit/<int:id>/', editUserByID),
+    path('user/<int:id>/edit/', editUserByID),
     path('user/delete/', deleteUser),
-    path('user/delete/<int:id>/', deleteUserByID),
+    path('user/<int:id>/delete/', deleteUserByID),
     path('users/', getAllUsers),
     # Library
     path('library/', getLibrary),
@@ -74,5 +80,7 @@ urlpatterns = [
     # Publication
     path('publication/', getPublication),
     path('publication/<int:id>/', getPublication),
-    path('publication/create/', createPublication)
+    path('publication/create/', createPublication),
+    path('publication/<int:id>/update/', updatePublication),
+    path('publication/<int:id>/associate/<int:lid>/', associatePublicationWithLibrary)
 ]

@@ -9,7 +9,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from knox.models import AuthToken
 from .permissions import IsAdministrator, IsDistributor, IsLibrarian, IsRegistredReader
-from .serializers import LibrarySerializer, PublicationSerializer, UserSerializer, UserNormalEditSerializer, UserAdminEditSerializer, \
+from .serializers import AdminKeySerializer, LibrarySerializer, PublicationSerializer, UserSerializer, UserNormalEditSerializer, UserAdminEditSerializer, \
                          LoginSerializer, RegisterSerializer
 from .models import Library, Account, Publication
 
@@ -138,7 +138,7 @@ def getPublication(request, id=None):
     method="POST",
     operation_description="Allows users with Administrator, Librarian or Distributor role to create new Publication",
     request_body=PublicationSerializer,
-    responses=publicationGetResponses
+    responses=publicationGetResponses #TODO: Modify for POST method
 )
 @api_view(['POST'])
 @permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian, IsDistributor))])
@@ -155,6 +155,55 @@ def createPublication(request):
             "status": "error", 
             "data": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
+## Update Publication
+@swagger_auto_schema(
+    tags=["Publication"], 
+    method="PUT",
+    operation_description="Allows users with Administrator, Librarian or Distributor role to update Publication",
+    request_body=PublicationSerializer,
+    responses=publicationGetResponses #TODO: Modify for PUT method
+)
+@api_view(['PUT'])
+@permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian, IsDistributor))])
+def updatePublication(request, id):
+    publication = Publication.objects.get(id=id)
+    serializer = PublicationSerializer(publication, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "status": "success",
+            "user": UserSerializer(publication).data
+            }, status=status.HTTP_200_OK)
+    return Response(
+        serializer.errors, 
+        status=status.HTTP_400_BAD_REQUEST)
+## Make Publication availiable at Library
+@swagger_auto_schema(
+    tags=["Publication"], 
+    method="POST",
+    operation_description="Allows users with Administrator, Librarian or Distributor role to update Publication",
+    responses=publicationGetResponses #TODO: Modify for POST method
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
+def associatePublicationWithLibrary(request, id, lid):
+    publication = Publication.objects.get(id=id)
+    if publication is None:
+        return Response({
+            "status": "error", 
+            "data": "Failed to get publication.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    library = Library.objects.get(lid=lid)
+    if library is None:
+        return Response({
+            "status": "error", 
+            "data": "Failed to get library.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    publication.availiable_at.add(library)
+    publication.save()
+    return Response({
+        "status": "success",
+        }, status=status.HTTP_200_OK)
 # =====================================================================================================================
 
 # UserAPI =============================================================================================================
@@ -353,6 +402,135 @@ def getAllUsers(request):
     return Response({
         "status": "success", 
         "data": serializer.data
+        }, status=status.HTTP_200_OK)
+# =====================================================================================================================
+
+# AdminAPI ============================================================================================================
+## Set user's role to Administrator
+@swagger_auto_schema(
+    tags=["Administration"], 
+    method="POST",
+    operation_description="Allows user to promote himself to Administrator if no other Administrator is defined yet",
+    request_body=AdminKeySerializer,
+    responses=publicationGetResponses #TODO: Modify for POST method
+)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def makeAdministratorUsingKey(request):
+    try:
+        admin = Account.objects.get(role='4')
+    except:
+        pass
+    else:
+        return Response({
+            "status": "error", 
+            "data": "Another Administrator already exists.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    user = Account.objects.get(email=request.user.email)
+    if user is None:
+        return Response({
+            "status": "error", 
+            "data": "Failed to get user.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    serializer = AdminKeySerializer(data=request.data)
+    if serializer.is_valid() is not True:
+        return Response({
+            "status": "error", 
+            "data": "Invalid key!"
+            }, status=status.HTTP_401_UNAUTHORIZED)
+    user.role = '4'
+    user.save()
+    return Response({
+        "status": "success", 
+        "data": UserSerializer(user).data
+        }, status=status.HTTP_200_OK)
+## Set user's role to Administrator
+@swagger_auto_schema(
+    tags=["Administration"], 
+    method="POST",
+    operation_description="Allows users with Administrator role to change selected user's role to Administrator",
+    responses=publicationGetResponses #TODO: Modify for POST method
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, IsAdministrator)])
+def makeAdministrator(request, id):
+    user = Account.objects.get(id=id)
+    if user is None:
+        return Response({
+            "status": "error", 
+            "data": "Failed to get user.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    user.role = '4'
+    user.save()
+    return Response({
+        "status": "success", 
+        "data": UserSerializer(user).data
+        }, status=status.HTTP_200_OK)
+## Set user's role to Librarian
+@swagger_auto_schema(
+    tags=["Administration"], 
+    method="POST",
+    operation_description="Allows users with Administrator role to change selected user's role to Librarian",
+    responses=publicationGetResponses #TODO: Modify for POST method
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, IsAdministrator)])
+def makeLibrarian(request, id):
+    user = Account.objects.get(id=id)
+    if user is None:
+        return Response({
+            "status": "error", 
+            "data": "Failed to get user.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    user.role = '3'
+    user.save()
+    return Response({
+        "status": "success", 
+        "data": UserSerializer(user).data
+        }, status=status.HTTP_200_OK)
+## Set user's role to Distributor
+@swagger_auto_schema(
+    tags=["Administration"], 
+    method="POST",
+    operation_description="Allows users with Administrator role to change selected user's role to Distributor",
+    responses=publicationGetResponses #TODO: Modify for POST method
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, IsAdministrator)])
+def makeDistributor(request, id):
+    user = Account.objects.get(id=id)
+    if user is None:
+        return Response({
+            "status": "error", 
+            "data": "Failed to get user.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    user.role = '2'
+    user.save()
+    return Response({
+        "status": "success", 
+        "data": UserSerializer(user).data
+        }, status=status.HTTP_200_OK)
+## Set user's role to Registred User
+@swagger_auto_schema(
+    tags=["Administration"], 
+    method="POST",
+    operation_description="Allows users with Administrator role to change selected user's role to Registred User",
+    responses=publicationGetResponses #TODO: Modify for POST method
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, IsAdministrator)])
+def makeRegistredUser(request, id):
+    user = Account.objects.get(id=id)
+    if user is None:
+        return Response({
+            "status": "error", 
+            "data": "Failed to get user.",
+            }, status=status.HTTP_400_BAD_REQUEST)
+    user.role = '1'
+    user.save()
+    return Response({
+        "status": "success", 
+        "data": UserSerializer(user).data
         }, status=status.HTTP_200_OK)
 # =====================================================================================================================
 

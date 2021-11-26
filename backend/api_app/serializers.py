@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Library, Publication, Book, PublicationOrder, BookOrder, BookLoan
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+from django.conf import settings
 
 User = get_user_model()
 
@@ -31,6 +32,7 @@ class PublicationSerializer(serializers.ModelSerializer):
     pages                   = serializers.IntegerField()
     tags                    = serializers.CharField(max_length=255)
     rating                  = serializers.FloatField()
+    availiable_at           = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Publication
@@ -139,6 +141,15 @@ class UserAdminEditSerializer(serializers.ModelSerializer):
                 'role', 
                 'working_at',
             )
+
+# Admin Key Serializer
+class AdminKeySerializer(serializers.Serializer):
+    key = serializers.CharField(max_length=128)
+
+    def validate(self, data):
+        if data['key'] == settings.ADMIN_KEY:
+            return True
+        return False
 
 # Login Request Serializer
 class LoginSerializer(serializers.Serializer):

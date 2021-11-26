@@ -26,6 +26,7 @@ class Publication(models.Model):
     pages               = models.IntegerField()
     tags                = models.CharField(max_length=255)
     rating              = models.FloatField()
+    availiable_at       = models.ManyToManyField(Library)
 
 class Book(models.Model):
     STATES = (
