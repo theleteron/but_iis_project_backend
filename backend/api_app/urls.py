@@ -37,13 +37,13 @@ logoutResponse = {
     ),
 }
 knox_logout = swagger_auto_schema(
-    tags=["Authorization"], 
+    tags=["Authorization"],
     method="POST",
     operation_description="Endpoint for logging out of the system.",
     responses=logoutResponse
 ) (knox_views.LogoutView.as_view())
 knox_logoutAll = swagger_auto_schema(
-    tags=["Authorization"], 
+    tags=["Authorization"],
     method="POST",
     operation_description="Endpoint for logging out of the system. Logs out of all devices!",
     responses=logoutResponse
@@ -82,5 +82,27 @@ urlpatterns = [
     path('publication/<int:id>/', getPublication),
     path('publication/create/', createPublication),
     path('publication/<int:id>/update/', updatePublication),
-    path('publication/<int:id>/associate/<int:lid>/', associatePublicationWithLibrary)
+    path('publication/<int:id>/associate/<int:lid>/', associatePublicationWithLibrary),
+    # Order
+    path('order/', getOrder),
+    path('/order/<int:id>/', getOrder),
+    path(/order/library/<int:id>/, getOrderLibrarySpecified),
+    path(/order/user/<int:id>/, getOrderUserSpecified),
+    path(/order/delivered/<bool:delivered>/, getOrderDelivered),
+    path(/order/delivered/<bool:delivered>/library/<int:id>/, getOrderDelivered),
+    #path(/order/create/, createOrder),
+    path(/order/update/<int:id>/, updateOrder),
+    # Book
+    #path(/book/, getBook),
+    #path(/book/<int:id>/, getBook),
+    #path(/book/library/<int:id>/, getBookInLibrary),
+    #path(/book/create/, addBook),
+    #path(/book/update/<int:id>/, updateBook),
+    # Book Loan
+    #path(/book_loan/, getLoan),
+    #path(/book_loan/<int:id>/, getLoan),
+    #path(/book_loan/library/<int:id>/, getLoanInLibrary),
+    #path(/book_loan/create/, createLoan),
+    #path(/book_loan/create/unregistered/, createLoanUnregistered),
+    #path(/book_loan/update/<int:id>/, updateLoan)
 ]
