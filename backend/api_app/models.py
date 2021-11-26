@@ -112,6 +112,7 @@ class AccountManager(BaseUserManager):
                 password=password,
             )
         
+        user.role = 4
         user.is_superuser = True
         user.is_admin = True
         user.is_staff = True

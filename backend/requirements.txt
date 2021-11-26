@@ -1,6 +1,7 @@
 Django==3.2.9
 djangorestframework==3.12.4
 django-rest-knox==4.1.0
+rest_condition
 drf-yasg
 django-filter
 markdown
