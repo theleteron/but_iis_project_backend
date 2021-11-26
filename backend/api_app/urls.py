@@ -10,12 +10,12 @@ from .views import UserLogin, UserRegistration, associateLibrarianToLibrary, ass
 # API Open Documentation
 schema_view = get_schema_view(
     openapi.Info(
-      title="LibraryIS API",
-      default_version='v0.1',
+      title="📚 LibraryIS API",
+      default_version='v0.5',
       description="API overview for LibraryIS project",
-      terms_of_service="",
-      contact=openapi.Contact(email="api@iis.czleteron.net"),
-      license=openapi.License(name=""),
+      terms_of_service="https://iis.czleteron.net/tos/",
+      contact=openapi.Contact(name="🏫 IIS Library Project Team", url="https://iis.czleteron.net/team/"),
+      license=openapi.License(name="⚖️ MIT License", url="https://iis.czleteron.net/license/"),
    ),
    #url='https://iis.czleteron.net/api/',
    public=True,
