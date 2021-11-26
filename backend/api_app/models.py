@@ -42,7 +42,7 @@ class Book(models.Model):
 
 class PublicationOrder(models.Model):
     publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
-    library             = models.ForeignKey('Library', on_delete=models.RESTRICT)
+    library             = models.ForeignKey('Library', on_delete=models.RESTRICT, null=True)
     user                = models.ForeignKey('Account', on_delete=models.RESTRICT)
     date_of_order       = models.DateTimeField(auto_now_add=True)
     delivered           = models.BooleanField(default=False)
@@ -54,7 +54,9 @@ class BookOrder(models.Model):
     price_per_book      = models.FloatField()
 
 class BookLoan(models.Model):
-    user                = models.ForeignKey('Account', on_delete=models.RESTRICT)
+    user                = models.ForeignKey('Account', related_name="creator", on_delete=models.RESTRICT)
+    loans               = models.ForeignKey('Account', related_name="lender", on_delete=models.RESTRICT, null=True)
+    receives            = models.ForeignKey('Account', related_name="receiver", on_delete=models.RESTRICT, null=True)
     date_from           = models.DateTimeField()
     date_to             = models.DateTimeField()
     extension_to        = models.DateTimeField()
@@ -136,6 +138,7 @@ class Account(AbstractBaseUser):
     phone           = models.IntegerField(null=True)
     # Access details
     ROLE_OPTIONS = (
+        (0, "Unregistred user"),
         (1, "Registred reader"),
         (2, "Distributor"),
         (3, "Librarian"),

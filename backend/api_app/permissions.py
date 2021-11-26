@@ -23,3 +23,10 @@ class IsRegistredReader(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.user.role == '1'
+
+# This should be unreachable and unusable permission
+class IsNotRegistred(permissions.BasePermission):
+    message = "User is not unregistred!"
+
+    def has_permission(self, request, view):
+        return request.user.role == '0'

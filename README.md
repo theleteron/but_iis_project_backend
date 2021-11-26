@@ -88,13 +88,16 @@ All endpoints are prefixed by `/api` -> full endpoint address is then `<your_dom
 | `GET`        | `/book/<int:id>/`        | Returns book specified by `<int:id>`                                                                         | IsAdministrator \|\| IsLibrarian |             |
 | `GET`        | `/book/library/<int:id>/`| Returns list of all books from the library specified by `<int:id>`                                           | IsAdministrator \|\| IsLibrarian |             |
 | `POST`       | `/book/create/`          | Adds a new book                                                                                              | IsAdministrator \|\| IsLibrarian |             |
-| `PUT`        | `/book/update/<int:id>/` | Update book - for changing condition, loaned status or fixing information of the book specified by <int:id>  | IsAdministrator \|\| IsLibrarian |             |
+| `PUT`        | `/book/update/<int:id>/` | Update book - updating information of the book specified by `<int:id>`                                       | IsAdministrator \|\| IsLibrarian |             |
 ### Book Loan
 | Request type | API Endpoint                     | Description                                                                            | Permission                       | Implemented |
 |--------------|----------------------------------|----------------------------------------------------------------------------------------|----------------------------------|-------------|
 | `GET`        | `/book_loan/`                    | Returns list of all book loans in the system                                           | IsAdministrator \|\| IsLibrarian |             |
 | `GET`        | `/book_loan/<int:id>/`           | Returns book loan specified by `<int:id>`                                              | IsAdministrator \|\| IsLibrarian |             |
 | `GET`        | `/book_loan/library/<int:id>/`   | Returns list of all book loans from the library specified by `<int:id>`                | IsAdministrator \|\| IsLibrarian |             |
+| `GET`        | `/book_loan/user/<int:id>/`      | Returns list of all book loans made by a user specified by `<int:id>`                | IsAdministrator \|\| IsLibrarian |             |
 | `POST`       | `/book_loan/create/`             | Registered user or an employee creates a new book loan                                 | IsAuthenticated                  |             |
 | `POST`       | `/book_loan/create/unregistered/`| Unregistered user creates a new book loan                                              | AllowAny                         |             |
-| `PUT`        | `/book_loan/update/<int:id>/`    | Update book loan - for updating information about the book loan specified by <int:id>  | IsAdministrator \|\| IsLibrarian |             |
+| `PUT`        | `/book_loan/<int:id>/loan/`    | Update book loan - for adding librarian that loans book loan specified by `<int:id>`| IsLibrarian |             |
+| `PUT`        | `/book_loan/<int:id>/receive/`    | Update book loan - for adding librarian that receives book loan specified by `<int:id>`| IsLibrarian |             |
+| `PUT`        | `/book_loan/<int:id>/update/`    | Update book loan - for adding fine to a book loan specified by `<int:id>`| IsAdministrator \|\| IsLibrarian |             |

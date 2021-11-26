@@ -4,8 +4,13 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from knox import views as knox_views
-from .views import UserLogin, UserRegistration, associateLibrarianToLibrary, associatePublicationWithLibrary, createLibrary, createPublication, deleteUser, deleteUserByID, getLibrary, getPublication, getUser, getUserByID, editUser, editUserByID, \
-                   getAllUsers, makeAdministrator, makeAdministratorUsingKey, makeDistributor, makeLibrarian, updatePublication, makeRegistredUser
+from .views import deliverOrder, UserLogin, UserRegistration, associateLibrarianToLibrary,      \
+    associatePublicationWithLibrary, createLibrary, createOrder, createPublication, deleteUser, \
+    deleteUserByID, getLibrary, getOrder, getOrderDelivered, getOrderLibrarySpecified,          \
+    getOrderUserSpecified, getPublication, getUser, getUserByID, editUser, editUserByID,        \
+    getAllUsers, makeAdministrator, makeAdministratorUsingKey, makeDistributor, makeLibrarian,  \
+    updateLibrary, updatePublication, makeRegistredUser, getBook, getBookInLibrary, updateBook, \
+    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID #, loanBook, receiveBook
 
 # API Open Documentation
 schema_view = get_schema_view(
@@ -50,6 +55,7 @@ knox_logoutAll = swagger_auto_schema(
 ) (knox_views.LogoutAllView.as_view())
 
 urlpatterns = [
+    # API Doc
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('doc/swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('doc/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
@@ -76,6 +82,7 @@ urlpatterns = [
     path('library/', getLibrary),
     path('library/<int:id>/', getLibrary),
     path('library/create/', createLibrary),
+    path('library/<int:id>/update', updateLibrary),
     path('library/<int:id>/associate/<int:uid>/', associateLibrarianToLibrary),
     # Publication
     path('publication/', getPublication),
@@ -85,24 +92,27 @@ urlpatterns = [
     path('publication/<int:id>/associate/<int:lid>/', associatePublicationWithLibrary),
     # Order
     path('order/', getOrder),
-    path('/order/<int:id>/', getOrder),
-    path(/order/library/<int:id>/, getOrderLibrarySpecified),
-    path(/order/user/<int:id>/, getOrderUserSpecified),
-    path(/order/delivered/<bool:delivered>/, getOrderDelivered),
-    path(/order/delivered/<bool:delivered>/library/<int:id>/, getOrderDelivered),
-    #path(/order/create/, createOrder),
-    path(/order/update/<int:id>/, updateOrder),
+    path('order/<int:id>/', getOrder),
+    path('order/library/<int:id>/', getOrderLibrarySpecified),
+    path('order/user/<int:id>/', getOrderUserSpecified),
+    path('order/delivered/<int:delivered>/', getOrderDelivered),
+    path('order/delivered/<int:delivered>/library/<int:id>/', getOrderDelivered),
+    path('order/create/', createOrder),
+    path('order/<int:id>/deliver/', deliverOrder),
     # Book
-    #path(/book/, getBook),
-    #path(/book/<int:id>/, getBook),
-    #path(/book/library/<int:id>/, getBookInLibrary),
-    #path(/book/create/, addBook),
-    #path(/book/update/<int:id>/, updateBook),
+    path('book/', getBook),
+    path('book/<int:id>/', getBook),
+    path('book/library/<int:id>/', getBookInLibrary),
+    path('book/<int:id>/update/', updateBook),
     # Book Loan
-    #path(/book_loan/, getLoan),
-    #path(/book_loan/<int:id>/, getLoan),
-    #path(/book_loan/library/<int:id>/, getLoanInLibrary),
-    #path(/book_loan/create/, createLoan),
-    #path(/book_loan/create/unregistered/, createLoanUnregistered),
-    #path(/book_loan/update/<int:id>/, updateLoan)
+    path('bookloan/', getLoan),
+    path('bookloan/<int:id>/', getLoan),
+    path('bookloan/library/<int:id>/', getLoanInLibrary),
+    path('bookloan/user/', getLoanUser),
+    path('bookloan/user/<int:id>/', getLoanUser),
+    #path('bookloan/create/', createLoan),
+    #path('bookloan/create/unregistered/', createLoanUnregistered),
+    #path('bookloan/<int:id>/loan/', loanBook),        # librarian loans book/s: book_loan.loans = account
+    #path('bookloan/<int:id>/receive/', receiveBook),  # librarian receives book/s: book_loan.receives = account
+    #path('bookloan/<int:id>/update/', updateLoan)
 ]
