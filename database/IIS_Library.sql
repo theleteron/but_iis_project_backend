@@ -23,8 +23,8 @@ CREATE TABLE `Library opening hours` (
     ID INT AUTO_INCREMENT NOT NULL,
     `Library ID` INT,
     Day INT(1) NOT NULL,
-    `Open time` TIME,
-    `Close time` TIME,
+    `Open time` VARCHAR (6),
+    `Close time` VARCHAR (6),
     PRIMARY KEY (ID),
     FOREIGN KEY (`Library ID`) REFERENCES Library(ID) ON UPDATE CASCADE ON DELETE RESTRICT
 );

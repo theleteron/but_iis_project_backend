@@ -353,7 +353,27 @@ def getPublicationInLibrary(request, id, lid):
         "status": "not_availiable"
     }, status=status.HTTP_404_NOT_FOUND)
 
-
+## getPublicationsInLibrary
+@swagger_auto_schema(
+    tags=["Publication"],
+    method="GET",
+    operation_description="Allows users what publications are availiable at specified library",
+    responses=publicationGetResponses,
+    security=[]
+)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def getPublicationsInLibrary(request, lid):
+    items = Publication.objects.filter(available_at=lid)
+    serializer = PublicationSerializer(items, many=True)
+    return Response({
+        "status": "success",
+        "data": serializer.data
+    }, status=status.HTTP_200_OK)
+    
+    return Response({
+        "status": "not_availiable"
+    }, status=status.HTTP_404_NOT_FOUND)
 
 ## Create Publication
 publicationPostResponse = {
@@ -1289,6 +1309,145 @@ def getLibraryVoting(request, id):
     return Response({
         "status": "success",
         "data": serializer.data
+    }, status=status.HTTP_200_OK)
+
+## Create a new voting
+votingPostResponses = {
+    "200": openapi.Response(
+        description="Creation of voting successfull!",
+        examples={
+            "application/json": {
+            "status": "success",
+            "data": "<voting_serialized_data>"
+            }
+        }
+    ),
+    "401": openapi.Response(
+        description="Unauthorized!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    ),
+    "404": openapi.Response(
+        description="Voting not found!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    )
+}
+
+@swagger_auto_schema(
+    tags=["Voting"],
+    method="POST",
+    operation_description="Allows user create new voting",
+    request_body=VotingSerializer,
+    responses=votingPostResponses
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsDistributor))])
+def createVoting(request):
+    serializer = VotingSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+           "status": "success"
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response({
+            "status": "error",
+            "data": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+## Vote for a publication
+votingPutResponses = {
+    "200": openapi.Response(
+        description="Voteing updated!",
+        examples={
+            "application/json": {
+                "status": "success",
+                "vote": "<vote_data>"
+            }
+        }
+    ),
+    "400": openapi.Response(
+        description="Invalid data format.",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    ),
+    "401": openapi.Response(
+        description="Unauthorized to do the operation.",
+        examples={
+            "application/json": {
+                "detail": "Authentication credentials were not provided."
+            }
+        }
+    ),
+    "404": openapi.Response(
+        description="Voting not found!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    )
+}
+
+
+@swagger_auto_schema(
+    tags=["Voting"],
+    method="PUT",
+    operation_description="Allows user to vote to buy publication to library",
+    request_body=VotingSerializer,
+    responses=votingPutResponses
+)
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def vote(request, id):
+    voting = get_object_or_404(Voting, id=id)
+    if voting.completed:
+        return Response({
+            "status": "not_availiable"
+        },status=status.HTTP_404_NOT_FOUND)
+    if request.user in voting.user.all():
+        return Response({
+            "status": "error",
+            "data": "You have already voted!"
+        },status=status.HTTP_401_UNAUTHORIZED)
+    voting.votes += 1
+    voting.save()
+    return Response({
+        "status": "success",
+        "data": VotingSerializer(voting).data
+    }, status=status.HTTP_200_OK)
+
+# End Voting
+@swagger_auto_schema(
+    tags=["Voting"],
+    method="PUT",
+    operation_description="Allows user to end voting",
+    request_body=VotingSerializer,
+    responses=votingPutResponses
+)
+@api_view(['PUT'])
+@permission_classes([And(IsAuthenticated, Or(IsLibrarian, IsAdministrator, IsDistributor))])
+def voteEnd(request, id):
+    voting = get_object_or_404(Voting, id=id)
+    voting.completed=True
+    voting.save()
+    return Response({
+        "status": "success",
+        "data": VotingSerializer(voting).data
     }, status=status.HTTP_200_OK)
 
 # =====================================================================================================================

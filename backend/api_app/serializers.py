@@ -38,7 +38,7 @@ class PublicationSerializer(serializers.ModelSerializer):
     pages                   = serializers.IntegerField()
     tags                    = serializers.CharField(max_length=255)
     rating                  = serializers.FloatField(default=0)
-    available_at           = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    available_at            = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Publication
@@ -54,6 +54,7 @@ class BookSerializer(serializers.ModelSerializer):
     condition               = serializers.CharField(max_length=30)
     section                 = serializers.IntegerField()
     loaned                  = serializers.BooleanField(default=False)
+    reserved                = serializers.BooleanField(default=False)
 
     class Meta:
         model = Book
@@ -161,6 +162,7 @@ class BookOrderSerializer(serializers.ModelSerializer):
 class VotingSerializer(serializers.ModelSerializer):
     library                 = serializers.PrimaryKeyRelatedField(read_only=True)
     publication             = serializers.PrimaryKeyRelatedField(read_only=True)
+    User                    = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     votes                   = serializers.IntegerField()
     complete                = serializers.BooleanField(default=False)
 
@@ -231,9 +233,11 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
         book_ids = validated_data.pop('books',None)
         for id in book_ids:
             book = get_object_or_404(Book, id=id)
-            if book.loaned:
+            if book.loaned or book.reserverd:
+                book_loan.delete()
                 raise ValueError
             else:
+                book.reserverd = True
                 book_loan.books.add(book)
                 book.save()
         book_loan.save()

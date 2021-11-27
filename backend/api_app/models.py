@@ -14,79 +14,6 @@ class Library(models.Model):
     street              = models.CharField(max_length=255)
     zip_code            = models.IntegerField()
 
-class Publication(models.Model):
-    name                = models.CharField(max_length=50)
-    series              = models.CharField(max_length=50)
-    synopsis            = models.CharField(max_length=4096)
-    authors             = models.CharField(max_length=255)
-    language            = models.CharField(max_length=50)
-    ISBN                = models.CharField(max_length=20, unique=True)
-    date_of_publication = models.DateTimeField()
-    publisher           = models.CharField(max_length=50)
-    genre               = models.CharField(max_length=50)
-    pages               = models.IntegerField()
-    tags                = models.CharField(max_length=255)
-    rating              = models.FloatField(default=0)
-    rated_sum           = models.IntegerField(default=0)
-    rated_times         = models.IntegerField(default=0)
-    available_at        = models.ManyToManyField(Library)
-
-class Book(models.Model):
-    STATES = (
-        (1, "New"),
-        (2, "Used"),
-        (3, "Damaged"),
-    )
-    publication         = models.ForeignKey('Publication', on_delete=models.CASCADE)
-    library             = models.ForeignKey('Library', on_delete=models.CASCADE)
-    condition           = models.CharField(max_length=30, choices=STATES, default=1)
-    section             = models.IntegerField()
-    loaned              = models.BooleanField(default=False)
-
-class PublicationOrder(models.Model):
-    publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
-    library             = models.ForeignKey('Library', on_delete=models.RESTRICT, null=True)
-    user                = models.ForeignKey('Account', on_delete=models.RESTRICT)
-    date_of_order       = models.DateTimeField(auto_now_add=True)
-    delivered           = models.BooleanField(default=False)
-    price               = models.FloatField()
-
-class BookOrder(models.Model):
-    publication_order   = models.ForeignKey('PublicationOrder', on_delete=models.CASCADE)
-    number_of_books     = models.IntegerField()
-    price_per_book      = models.FloatField()
-
-class BookLoan(models.Model):
-    user                = models.ForeignKey('Account', related_name="creator", on_delete=models.RESTRICT)
-    loans               = models.ForeignKey('Account', related_name="lender", on_delete=models.RESTRICT, null=True)
-    receives            = models.ForeignKey('Account', related_name="receiver", on_delete=models.RESTRICT, null=True)
-    date_from           = models.DateTimeField()
-    date_to             = models.DateTimeField()
-    extension_to        = models.DateTimeField(null=True)
-    fine                = models.IntegerField(default=0)
-    books               = models.ManyToManyField(Book)
-
-class Voting(models.Model):
-    library             = models.ForeignKey('Library', on_delete=models.CASCADE)
-    publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
-    votes               = models.IntegerField()
-    completed           = models.BooleanField(default=False)
-
-class OpeningHours(models.Model):
-    library             = models.OneToOneField('Library', on_delete=models.CASCADE)
-    day                 = ArrayField(
-        models.CharField(max_length=2, blank=True),
-        size = 7
-    )
-    open_time           = ArrayField(
-        models.TimeField(blank=True),
-        size = 7
-    )
-    close_time          = ArrayField(
-        models.TimeField(blank=True),
-        size = 7
-    )
-
 ###
 #   USER DATA & MANAGMENT
 ###
@@ -188,3 +115,83 @@ class Account(AbstractBaseUser):
 
     def get_short_name(self):
         return self.first_name
+
+
+###
+#   DATABASE STRUCTURE
+###
+
+class Publication(models.Model):
+    name                = models.CharField(max_length=50)
+    series              = models.CharField(max_length=50)
+    synopsis            = models.CharField(max_length=4096)
+    authors             = models.CharField(max_length=255)
+    language            = models.CharField(max_length=50)
+    ISBN                = models.CharField(max_length=20, unique=True)
+    date_of_publication = models.DateTimeField()
+    publisher           = models.CharField(max_length=50)
+    genre               = models.CharField(max_length=50)
+    pages               = models.IntegerField()
+    tags                = models.CharField(max_length=255)
+    rating              = models.FloatField(default=0)
+    rated_sum           = models.IntegerField(default=0)
+    rated_times         = models.IntegerField(default=0)
+    available_at        = models.ManyToManyField(Library)
+
+class Book(models.Model):
+    STATES = (
+        (1, "New"),
+        (2, "Used"),
+        (3, "Damaged"),
+    )
+    publication         = models.ForeignKey('Publication', on_delete=models.CASCADE)
+    library             = models.ForeignKey('Library', on_delete=models.CASCADE)
+    condition           = models.CharField(max_length=30, choices=STATES, default=1)
+    section             = models.IntegerField()
+    loaned              = models.BooleanField(default=False)
+    reserverd           = models.BooleanField(default=False)
+
+class PublicationOrder(models.Model):
+    publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
+    library             = models.ForeignKey('Library', on_delete=models.RESTRICT, null=True)
+    user                = models.ForeignKey('Account', on_delete=models.RESTRICT)
+    date_of_order       = models.DateTimeField(auto_now_add=True)
+    delivered           = models.BooleanField(default=False)
+    price               = models.FloatField()
+
+class BookOrder(models.Model):
+    publication_order   = models.ForeignKey('PublicationOrder', on_delete=models.CASCADE)
+    number_of_books     = models.IntegerField()
+    price_per_book      = models.FloatField()
+
+class BookLoan(models.Model):
+    user                = models.ForeignKey('Account', related_name="creator", on_delete=models.RESTRICT)
+    loans               = models.ForeignKey('Account', related_name="lender", on_delete=models.RESTRICT, null=True)
+    receives            = models.ForeignKey('Account', related_name="receiver", on_delete=models.RESTRICT, null=True)
+    date_from           = models.DateTimeField()
+    date_to             = models.DateTimeField()
+    extension_to        = models.DateTimeField(null=True)
+    fine                = models.IntegerField(default=0)
+    books               = models.ManyToManyField(Book)
+
+class Voting(models.Model):
+    library             = models.ForeignKey('Library', on_delete=models.CASCADE)
+    publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
+    users               = models.ManyToManyField(Account)
+    votes               = models.IntegerField()
+    completed           = models.BooleanField(default=False)
+
+class OpeningHours(models.Model):
+    library             = models.OneToOneField('Library', on_delete=models.CASCADE)
+    day                 = ArrayField(
+        models.CharField(max_length=2, blank=True),
+        size = 7
+    )
+    open_time           = ArrayField(
+        models.TimeField(blank=True),
+        size = 7
+    )
+    close_time          = ArrayField(
+        models.TimeField(blank=True),
+        size = 7
+    )

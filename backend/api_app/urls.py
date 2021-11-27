@@ -10,7 +10,9 @@ from .views import confirmLoan, deliverOrder, UserLogin, UserRegistration, assoc
     getOrderUserSpecified, getPublication, getUser, getUserByID, editUser, editUserByID,        \
     getAllUsers, makeAdministrator, makeAdministratorUsingKey, makeDistributor, makeLibrarian,  \
     updateLibrary, updatePublication, makeRegistredUser, getBook, getBookInLibrary, updateBook, \
-    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID, createLoan, getVoting, getLibraryVoting, receiveLoan, updateLoan, setOpeningHoursLibrary, getOpeningHoursLibrary, ratePublication, getPublicationInLibrary #createVoting, vote, updateLoan
+    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID, createLoan, getVoting, getLibraryVoting, \
+    receiveLoan, updateLoan, setOpeningHoursLibrary, getOpeningHoursLibrary, ratePublication, getPublicationInLibrary, \
+    createVoting, vote, getPublicationsInLibrary, voteEnd
 
 # API Open Documentation
 schema_view = get_schema_view(
@@ -90,6 +92,7 @@ urlpatterns = [
     path('publication/', getPublication),
     path('publication/<int:id>/', getPublication),
     path('publication/<int:id>/library/<int:lid>/', getPublicationInLibrary),
+    path('publication/library/<int:lid>/', getPublicationsInLibrary),
     path('publication/create/', createPublication),
     path('publication/<int:id>/update/', updatePublication),
     path('publication/<int:id>/rate/<int:rate>/', ratePublication),
@@ -115,13 +118,14 @@ urlpatterns = [
     path('bookloan/user/', getLoanUser),
     path('bookloan/user/<int:id>/', getLoanUserByID),
     path('bookloan/create/', createLoan),
-    path('bookloan/<int:id>/loan/', confirmLoan),        # librarian loans book/s: book_loan.loans = account
-    path('bookloan/<int:id>/receive/', receiveLoan),  # librarian receives book/s: book_loan.receives = account
+    path('bookloan/<int:id>/loan/', confirmLoan),
+    path('bookloan/<int:id>/receive/', receiveLoan),
     path('bookloan/<int:id>/fine/<int:fine>/', updateLoan),
     # Voting
     path('voting/', getVoting),
     path('voting/<int:id>/', getVoting),
     path('voting/library/<int:id>/', getLibraryVoting),
-    #path('voting/create/', createVoting),
-    #path('voting/vote/<int:id>`, vote)
+    path('voting/create/', createVoting),
+    path('voting/vote/<int:id>', vote),
+    path('voting/end/<int:id>', voteEnd)
 ]
