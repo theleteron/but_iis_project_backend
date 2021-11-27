@@ -1122,6 +1122,12 @@ def confirmLoan(request, id):
             "status": "error",
             "data": "Loan already confirmed!"
         }, status=status.HTTP_400_BAD_REQUEST)
+    for book in loan.books.all():
+        if book.loaned:
+            return Response({
+                "status": "error",
+                "data": "Some of the books are already loaned to someone else!"
+            }, status=status.HTTP_400_BAD_REQUEST)
     loan.loans = request.user
     loan.save()
     for book in loan.books.all():
