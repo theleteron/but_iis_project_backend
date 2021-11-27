@@ -1031,19 +1031,31 @@ def confirmLoan(request, id):
         "status": "success"
     }, status=status.HTTP_200_OK)
 
-## Create a new BookLoan as an UnregisteredUser
-#@swagger_auto_schema(
-#   tags=["Book Loan"],
-#   method="POST",
-#   operation_description="An unregistered user creates new book loan",
-#   responses= # TODO: response
-#)
-#@api_view(['POST'])
-#def createLoanUnregistered(request):
-#
-# loanBook
-# receiveBook
-#
+## Receive BookLoan
+@swagger_auto_schema(
+    tags=["Book Loan"],
+    method="POST",
+    operation_description="Receive loaned books",
+    responses=bookLoanPostResponses
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
+def receiveLoan(request, id):
+    loan = get_object_or_404(BookLoan, id=id)
+    loan.receives = request.user
+    loan.save()
+    for book in loan.books.all():
+        book.loaned = False
+        book.save()
+#    if loan.fine:
+#        return Response({
+#            "status": "success",
+#            "data": loan.fine,
+#        }, status=status.HTTP_200_OK)
+    return Response({
+        "status": "success"
+    }, status=status.HTTP_200_OK)
+
 ## Add fine to a BookLoan
 #@swagger_auto_schema(
 #    tags=["Book Loan"],
