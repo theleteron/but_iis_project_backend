@@ -89,7 +89,7 @@ urlpatterns = [
     # Publication
     path('publication/', getPublication),
     path('publication/<int:id>/', getPublication),
-    path('publication/<int:id>/library/<int:lid>', getPublicationInLibrary),
+    path('publication/<int:id>/library/<int:lid>/', getPublicationInLibrary),
     path('publication/create/', createPublication),
     path('publication/<int:id>/update/', updatePublication),
     path('publication/<int:id>/rate/<int:rate>/', ratePublication),
