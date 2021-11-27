@@ -59,7 +59,7 @@ class BookLoan(models.Model):
     receives            = models.ForeignKey('Account', related_name="receiver", on_delete=models.RESTRICT, null=True)
     date_from           = models.DateTimeField()
     date_to             = models.DateTimeField()
-    extension_to        = models.DateTimeField()
+    extension_to        = models.DateTimeField(null=True)
     fine                = models.FloatField(default=0)
     books               = models.ManyToManyField(Book)
 

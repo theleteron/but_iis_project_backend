@@ -4,13 +4,13 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from knox import views as knox_views
-from .views import deliverOrder, UserLogin, UserRegistration, associateLibrarianToLibrary,      \
+from .views import confirmLoan, deliverOrder, UserLogin, UserRegistration, associateLibrarianToLibrary,      \
     associatePublicationWithLibrary, createLibrary, createOrder, createPublication, deleteUser, \
     deleteUserByID, getLibrary, getOrder, getOrderDelivered, getOrderLibrarySpecified,          \
     getOrderUserSpecified, getPublication, getUser, getUserByID, editUser, editUserByID,        \
     getAllUsers, makeAdministrator, makeAdministratorUsingKey, makeDistributor, makeLibrarian,  \
     updateLibrary, updatePublication, makeRegistredUser, getBook, getBookInLibrary, updateBook, \
-    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID #, loanBook, receiveBook
+    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID, createLoan #, loanBook, receiveBook
 
 # API Open Documentation
 schema_view = get_schema_view(
@@ -109,10 +109,10 @@ urlpatterns = [
     path('bookloan/<int:id>/', getLoan),
     path('bookloan/library/<int:id>/', getLoanInLibrary),
     path('bookloan/user/', getLoanUser),
-    path('bookloan/user/<int:id>/', getLoanUser),
-    #path('bookloan/create/', createLoan),
+    path('bookloan/user/<int:id>/', getLoanUserByID),
+    path('bookloan/create/', createLoan),
     #path('bookloan/create/unregistered/', createLoanUnregistered),
-    #path('bookloan/<int:id>/loan/', loanBook),        # librarian loans book/s: book_loan.loans = account
+    path('bookloan/<int:id>/loan/', confirmLoan),        # librarian loans book/s: book_loan.loans = account
     #path('bookloan/<int:id>/receive/', receiveBook),  # librarian receives book/s: book_loan.receives = account
     #path('bookloan/<int:id>/update/', updateLoan)
 ]

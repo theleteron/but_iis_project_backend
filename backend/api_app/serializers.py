@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from .models import Account, Library, Publication, Book, PublicationOrder, BookOrder, BookLoan
@@ -159,6 +160,39 @@ class BookOrderSerializer(serializers.ModelSerializer):
 
 
 # BookLoanAPI =========================================================================================================
+# Serializer for creating Bookloan
+class BookLoanCreateSerializer(serializers.ModelSerializer):
+    date_from               = serializers.DateTimeField()
+    date_to                 = serializers.DateTimeField()
+    books                   = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+
+    class Meta:
+        model = BookLoan
+        fields = (
+            'date_from',
+            'date_to',
+            'books'
+        )
+
+    def create(self, validated_data):
+        book_loan = BookLoan()
+        book_loan.user = validated_data['creator']
+        book_loan.date_from = validated_data['date_from']
+        book_loan.date_to = validated_data['date_to']
+        book_loan.save()
+        book_ids = validated_data.pop('books',None)
+        for id in book_ids:
+            book = get_object_or_404(Book, id=id)
+            if book.loaned:
+                raise ValueError
+            else:
+                book_loan.books.add(book)
+                book.save()
+        book_loan.save()
+        return book_loan
+
 # Serializer for BookLoan model
 class BookLoanSerializer(serializers.ModelSerializer):
     user                    = serializers.PrimaryKeyRelatedField(read_only=True)

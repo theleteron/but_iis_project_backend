@@ -10,7 +10,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from knox.models import AuthToken
 from .permissions import IsAdministrator, IsDistributor, IsLibrarian, IsRegistredReader
-from .serializers import AdminKeySerializer, BookLoanSerializer, BookSerializer, LibrarySerializer, \
+from .serializers import AdminKeySerializer, BookLoanCreateSerializer, BookLoanSerializer, BookSerializer, LibrarySerializer, \
     PublicationOrderCreateByAdmin, PublicationOrderCreateByLibrarian, PublicationOrderSerializer,   \
     PublicationSerializer, UserSerializer, UserNormalEditSerializer, UserAdminEditSerializer,       \
     LoginSerializer, RegisterSerializer
@@ -957,28 +957,79 @@ def getLoanUser(request):
     }, status=status.HTTP_200_OK)
 
 ## Create a new BookLoan
-#@swagger_auto_schema(
-#   tags=["Book Loan"],
-#   method="POST",
-##   operation_description="A registered user creates new book loan",
-#   responses= # TODO: response
-#)
-#@api_view(['POST'])
-#@permission_classes([IsAuthenticated])
-#def createLoan(request):
-#   serializer = BookLoanSerializer(data=request.data)
-#   if serializer.is_valid():
-#            INSERT MAGIC
-#            return Response({
-#                "status": "success"
-#            }, status=status.HTTP_200_OK)
-#        else:
-#            return Response({
-#                "status": "error",
-#                "data": serializer.errors
-#            }, status=status.HTTP_400_BAD_REQUEST)
-#
-#
+bookLoanPostResponses = {
+    "200": openapi.Response(
+        description="Creation of book loan successfull!",
+        examples={
+            "application/json": {
+            "status": "success",
+            "data": "<bookloan_serialized_data>"
+            }
+        }
+    ),
+    "401": openapi.Response(
+        description="Unauthorized!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    ),
+    "404": openapi.Response(
+        description="Something not found!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    )
+}
+
+
+@swagger_auto_schema(
+    tags=["Book Loan"],
+    method="POST",
+    operation_description="A registered user creates new book loan",
+    request_body=BookLoanCreateSerializer,
+    responses=bookLoanPostResponses
+)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createLoan(request):
+    serializer = BookLoanCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(creator=request.user)
+        return Response({
+           "status": "success"
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response({
+            "status": "error",
+            "data": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+## Confirm BookLoan
+@swagger_auto_schema(
+    tags=["Book Loan"],
+    method="POST",
+    operation_description="Confirm loan",
+    responses=bookLoanPostResponses
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
+def confirmLoan(request, id):
+    loan = get_object_or_404(BookLoan, id=id)
+    loan.loans = request.user
+    loan.save()
+    for book in loan.books.all():
+        book.loaned = True
+        book.save()
+    return Response({
+        "status": "success"
+    }, status=status.HTTP_200_OK)
+
 ## Create a new BookLoan as an UnregisteredUser
 #@swagger_auto_schema(
 #   tags=["Book Loan"],
@@ -1330,12 +1381,16 @@ adminPostResponses = {
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def makeAdministratorUsingKey(request):
-    admin = get_object_or_404(Account, role='4')
-    if admin:
-        return Response({
-            "status": "error",
-            "data": "Another Administrator already exists.",
-        }, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        admin = Account.objects.get(role='4')
+    except:
+        pass
+    else:
+        if admin:
+            return Response({
+                "status": "error",
+                "data": "Another Administrator already exists.",
+            }, status=status.HTTP_400_BAD_REQUEST)
     user = get_object_or_404(Account, email=request.user.email)
     serializer = AdminKeySerializer(data=request.data)
     if serializer.is_valid() is not True:
