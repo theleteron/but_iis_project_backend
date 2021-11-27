@@ -10,7 +10,7 @@ from .views import confirmLoan, deliverOrder, UserLogin, UserRegistration, assoc
     getOrderUserSpecified, getPublication, getUser, getUserByID, editUser, editUserByID,        \
     getAllUsers, makeAdministrator, makeAdministratorUsingKey, makeDistributor, makeLibrarian,  \
     updateLibrary, updatePublication, makeRegistredUser, getBook, getBookInLibrary, updateBook, \
-    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID, createLoan, getVoting, getLibraryVoting, receiveLoan #, createVoting, vote, updateLoan
+    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID, createLoan, getVoting, getLibraryVoting, receiveLoan, updateLoan, setOpeningHoursLibrary, getOpeningHoursLibrary, ratePublication, getPublicationInLibrary #createVoting, vote, updateLoan
 
 # API Open Documentation
 schema_view = get_schema_view(
@@ -83,12 +83,16 @@ urlpatterns = [
     path('library/<int:id>/', getLibrary),
     path('library/create/', createLibrary),
     path('library/<int:id>/update', updateLibrary),
+    path('library/<int:id>/update/openinghours/', setOpeningHoursLibrary),
     path('library/<int:id>/associate/<int:uid>/', associateLibrarianToLibrary),
+    path('library/<int:id>/open/', getOpeningHoursLibrary),
     # Publication
     path('publication/', getPublication),
     path('publication/<int:id>/', getPublication),
+    path('publication/<int:id>/library/<int:lid>', getPublicationInLibrary),
     path('publication/create/', createPublication),
     path('publication/<int:id>/update/', updatePublication),
+    path('publication/<int:id>/rate/<int:rate>/', ratePublication),
     path('publication/<int:id>/associate/<int:lid>/', associatePublicationWithLibrary),
     # Order
     path('order/', getOrder),

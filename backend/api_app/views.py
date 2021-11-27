@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404;
 from django.contrib.auth.signals import user_logged_out
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -11,11 +11,11 @@ from drf_yasg.utils import swagger_auto_schema
 from knox.models import AuthToken
 from .permissions import IsAdministrator, IsDistributor, IsLibrarian, IsRegistredReader
 from .serializers import AdminKeySerializer, BookLoanCreateSerializer, BookLoanSerializer, BookSerializer, \
-    LibrarySerializer, \
+    LibrarySerializer, OpeningHoursCreateSerializer, \
     PublicationOrderCreateByAdmin, PublicationOrderCreateByLibrarian, PublicationOrderSerializer, \
     PublicationSerializer, UserSerializer, UserNormalEditSerializer, UserAdminEditSerializer, \
     LoginSerializer, RegisterSerializer, VotingSerializer
-from .models import Book, BookLoan, BookOrder, Library, Account, Publication, PublicationOrder, Voting
+from .models import Book, BookLoan, BookOrder, Library, Account, OpeningHours, Publication, PublicationOrder, Voting
 
 # LibraryAPI ==========================================================================================================
 ## Get Library (either specified or all)
@@ -225,6 +225,47 @@ def associateLibrarianToLibrary(request, id, uid):
         "data": UserSerializer(librarian).data
     }, status=status.HTTP_200_OK)
 
+@swagger_auto_schema(
+    tags=["Library"],
+    method="POST",
+    operation_description="Allows user with role Administrator or Librarian to set opening hours",
+    request_body=OpeningHoursCreateSerializer
+)
+@api_view(['POST'])
+@permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
+def setOpeningHoursLibrary(request, id):
+    library = get_object_or_404(Library, id=id)
+    if request.user == '3' and request.user.working_at is not library:
+        return Response({
+            "status": "error",
+            "details": "Selected user is not a Librarian responsible for this library."
+        }, status=status.HTTP_400_BAD_REQUEST)
+    serializer = OpeningHoursCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(library=library)
+        return Response({
+            "status": "success"
+        }, status=status.HTTP_200_OK)
+    return Response({
+        "status": "error",
+        "details": serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+    tags=["Library"],
+    method="GET",
+    operation_description="Returns opening hours of the library specified by library id",
+    responses=""
+)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def getOpeningHoursLibrary(request, id):
+    item = get_object_or_404(OpeningHours, library=id)
+    serializer = OpeningHoursCreateSerializer(item)   
+    return Response({
+        "status": "success",
+        "data": serializer.data
+    }, status=status.HTTP_200_OK)
 
 # =====================================================================================================================
 
@@ -276,6 +317,42 @@ def getPublication(request, id=None):
         "status": "success",
         "data": serializer.data
     }, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(
+    tags=["Publication"],
+    method="GET",
+    operation_description="Allows users check if publication is availiable at specified library",
+    responses=publicationGetResponses,
+    security=[]
+)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def getPublicationInLibrary(request, id, lid):
+    publication = get_object_or_404(Publication, id=id)
+    library = get_object_or_404(Library, id=lid)
+    if library in publication.available_at.all():
+        all_books = Book.objects.filter(publication=id).filter(library=lid)
+        total = all_books.count()
+        availiable_books = Book.objects.filter(publication=id).filter(library=lid).filter(loaned=False)
+        availiable = availiable_books.count()
+        serializer_all = BookSerializer(all_books, many=True)
+        serializer_ava = BookSerializer(availiable_books, many=True)
+        if availiable > 0:
+            return Response({
+                "status": "availiable",
+                "availiable": availiable,
+                "data": serializer_ava.data
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "status": "owned",
+                "owned": total,
+                "data": serializer_all.data
+            }, status=status.HTTP_200_OK)
+    return Response({
+        "status": "not_availiable"
+    }, status=status.HTTP_404_NOT_FOUND)
+
 
 
 ## Create Publication
@@ -441,6 +518,24 @@ def associatePublicationWithLibrary(request, id, lid):
         "data": PublicationSerializer(publication).data
     }, status=status.HTTP_200_OK)
 
+@swagger_auto_schema(
+    tags=["Publication"],
+    method="POST",
+    operation_description="Allows users to rate publication",
+    responses=publicationPostUserResponse
+)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def ratePublication(request, id, rate):
+    publication = get_object_or_404(Publication, id=id)
+    publication.rating = (publication.rated_sum + rate) / (publication.rated_times + 1)
+    publication.rated_times += 1
+    publication.rated_sum += rate
+    publication.save()
+    return Response({
+        "status": "success",
+        "data": PublicationSerializer(publication).data
+    }, status=status.HTTP_200_OK)
 
 # =====================================================================================================================
 
@@ -1022,6 +1117,11 @@ def createLoan(request):
 @permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
 def confirmLoan(request, id):
     loan = get_object_or_404(BookLoan, id=id)
+    if loan.loans is not None:
+        return Response({
+            "status": "error",
+            "data": "Loan already confirmed!"
+        }, status=status.HTTP_400_BAD_REQUEST)
     loan.loans = request.user
     loan.save()
     for book in loan.books.all():
@@ -1042,6 +1142,11 @@ def confirmLoan(request, id):
 @permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
 def receiveLoan(request, id):
     loan = get_object_or_404(BookLoan, id=id)
+    if loan.receives is not None:
+        return Response({
+            "status": "error",
+            "data": "Loan already returned!"
+        }, status=status.HTTP_400_BAD_REQUEST)
     loan.receives = request.user
     loan.save()
     for book in loan.books.all():

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.postgres.fields import ArrayField
 
 ###
 #   DATABASE STRUCTURE
@@ -25,8 +26,10 @@ class Publication(models.Model):
     genre               = models.CharField(max_length=50)
     pages               = models.IntegerField()
     tags                = models.CharField(max_length=255)
-    rating              = models.FloatField()
-    available_at       = models.ManyToManyField(Library)
+    rating              = models.FloatField(default=0)
+    rated_sum           = models.IntegerField(default=0)
+    rated_times         = models.IntegerField(default=0)
+    available_at        = models.ManyToManyField(Library)
 
 class Book(models.Model):
     STATES = (
@@ -66,7 +69,23 @@ class BookLoan(models.Model):
 class Voting(models.Model):
     library             = models.ForeignKey('Library', on_delete=models.CASCADE)
     publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
-    Votes               = models.IntegerField()
+    votes               = models.IntegerField()
+    completed           = models.BooleanField(default=False)
+
+class OpeningHours(models.Model):
+    library             = models.OneToOneField('Library', on_delete=models.CASCADE)
+    day                 = ArrayField(
+        models.CharField(max_length=2, blank=True),
+        size = 7
+    )
+    open_time           = ArrayField(
+        models.TimeField(blank=True),
+        size = 7
+    )
+    close_time          = ArrayField(
+        models.TimeField(blank=True),
+        size = 7
+    )
 
 ###
 #   USER DATA & MANAGMENT
@@ -137,9 +156,9 @@ class Account(AbstractBaseUser):
     last_name       = models.CharField(max_length=50)
     city            = models.CharField(max_length=50)
     street          = models.CharField(max_length=50)
-    zip_code        = models.IntegerField()
+    zip_code        = models.CharField(max_length=5)
     country         = models.CharField(max_length=50)
-    phone           = models.IntegerField(null=True)
+    phone           = models.CharField(max_length=15, null=True)
     # Access details
     ROLE_OPTIONS = (
         (0, "Unregistred user"),

@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from .models import Account, Library, Publication, Book, PublicationOrder, BookOrder, BookLoan
+from .models import Account, Library, OpeningHours, Publication, Book, PublicationOrder, BookOrder, BookLoan, Voting
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from django.conf import settings
@@ -12,7 +12,7 @@ User = get_user_model()
 # Serializer for Library model
 class LibrarySerializer(serializers.ModelSerializer):
     name                    = serializers.CharField(max_length=200)
-    description             = serializers.CharField(max_length=255, blank=True)
+    description             = serializers.CharField(max_length=255, allow_null=True)
     city                    = serializers.CharField(max_length=200)
     street                  = serializers.CharField(max_length=200)
     zip_code                = serializers.IntegerField()
@@ -27,7 +27,7 @@ class LibrarySerializer(serializers.ModelSerializer):
 # Serializer for Publication model
 class PublicationSerializer(serializers.ModelSerializer):
     name                    = serializers.CharField(max_length=50)
-    series                  = serializers.CharField(max_length=50, blank=True)
+    series                  = serializers.CharField(max_length=50, allow_null=True)
     synopsis                = serializers.CharField(max_length=4096)
     authors                 = serializers.CharField(max_length=255)
     language                = serializers.CharField(max_length=50)
@@ -37,7 +37,7 @@ class PublicationSerializer(serializers.ModelSerializer):
     genre                   = serializers.CharField(max_length=50)
     pages                   = serializers.IntegerField()
     tags                    = serializers.CharField(max_length=255)
-    rating                  = serializers.FloatField()
+    rating                  = serializers.FloatField(default=0)
     available_at           = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
@@ -162,6 +162,45 @@ class VotingSerializer(serializers.ModelSerializer):
     library                 = serializers.PrimaryKeyRelatedField(read_only=True)
     publication             = serializers.PrimaryKeyRelatedField(read_only=True)
     votes                   = serializers.IntegerField()
+    complete                = serializers.BooleanField(default=False)
+
+    class Meta:
+        model = Voting
+        fields = ('__all__')
+
+class OpeningHoursCreateSerializer(serializers.ModelSerializer):
+    day                     = serializers.ListField(
+        child=serializers.CharField()
+    )
+    open_time               = serializers.ListField(
+        child=serializers.TimeField()
+    )
+    close_time              = serializers.ListField(
+        child=serializers.TimeField()
+    )
+
+    class Meta:
+        model = OpeningHours
+        fields = (
+            'day',
+            'open_time',
+            'close_time'
+        )
+
+    def create(self, validated_data):
+        days = validated_data.pop('day', None)
+        opens = validated_data.pop('open_time', None)
+        closes = validated_data.pop('close_time', None)
+        if len(days) != len(opens) or len(days) != len(closes):
+            raise ValueError  
+        opening_hours = OpeningHours()
+        opening_hours.library = validated_data['library']
+        opening_hours.day = days
+        opening_hours.open_time = opens
+        opening_hours.close_time = closes
+        opening_hours.save()
+        return True
+
 
 # =====================================================================================================================
 
