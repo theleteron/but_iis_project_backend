@@ -113,7 +113,7 @@ urlpatterns = [
     path('bookloan/create/', createLoan),
     path('bookloan/<int:id>/loan/', confirmLoan),        # librarian loans book/s: book_loan.loans = account
     path('bookloan/<int:id>/receive/', receiveLoan),  # librarian receives book/s: book_loan.receives = account
-    #path('bookloan/<int:id>/update/', updateLoan)
+    path('bookloan/<int:id>/fine/<int:fine>/', updateLoan),
     # Voting
     path('voting/', getVoting),
     path('voting/<int:id>/', getVoting),

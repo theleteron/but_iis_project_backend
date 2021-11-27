@@ -90,18 +90,18 @@ All endpoints are prefixed by `/api` -> full endpoint address is then `<your_dom
 | `GET`        | `/book/library/<int:id>/`| Returns list of all books from the library specified by `<int:id>`                                           | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
 | `PUT`        | `/book/update/<int:id>/` | Update book - updating information of the book specified by `<int:id>`                                       | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
 ### Book Loan
-| Request type | API Endpoint                     | Description                                                                            | Permission                       | Implemented |
-|--------------|----------------------------------|----------------------------------------------------------------------------------------|----------------------------------|-------------|
-| `GET`        | `/book_loan/`                    | Returns list of all book loans in the system                                           | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
-| `GET`        | `/book_loan/<int:id>/`           | Returns book loan specified by `<int:id>`                                              | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
-| `GET`        | `/book_loan/library/<int:id>/`   | Returns list of all book loans from the library specified by `<int:id>`                | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
-| `GET`        | `/bookloan/user/`                | Returns list of loans that logged in user made                                         | IsAuthenticated                  | :heavy_check_mark: 
-| `GET`        | `/book_loan/user/<int:id>/`      | Returns list of all book loans made by a user specified by `<int:id>`                  | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
-| `POST`       | `/book_loan/create/`             | Registered user or an employee creates a new book loan                                 | IsAuthenticated                  | :heavy_check_mark: |
-| `POST`       | `/book_loan/create/unregistered/`| Unregistered user creates a new book loan                                              | AllowAny                         | :heavy_check_mark: |
-| `PUT`        | `/book_loan/<int:id>/loan/`      | Update book loan - for adding librarian that loans book loan specified by `<int:id>`   | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
-| `PUT`        | `/book_loan/<int:id>/receive/`   | Update book loan - for adding librarian that receives book loan specified by `<int:id>`| IsAdministrator \|\| IsLibrarian |                    |
-| `PUT`        | `/book_loan/<int:id>/update/`    | Update book loan - for adding fine to a book loan specified by `<int:id>`              | IsAdministrator \|\| IsLibrarian |                    |
+| Request type | API Endpoint                         | Description                                                                            | Permission                       | Implemented |
+|--------------|--------------------------------------|----------------------------------------------------------------------------------------|----------------------------------|-------------|
+| `GET`        | `/book_loan/`                        | Returns list of all book loans in the system                                           | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
+| `GET`        | `/book_loan/<int:id>/`               | Returns book loan specified by `<int:id>`                                              | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
+| `GET`        | `/book_loan/library/<int:id>/`       | Returns list of all book loans from the library specified by `<int:id>`                | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
+| `GET`        | `/bookloan/user/`                    | Returns list of loans that logged in user made                                         | IsAuthenticated                  | :heavy_check_mark: 
+| `GET`        | `/book_loan/user/<int:id>/`          | Returns list of all book loans made by a user specified by `<int:id>`                  | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
+| `POST`       | `/book_loan/create/`                 | Registered user or an employee creates a new book loan                                 | IsAuthenticated                  | :heavy_check_mark: |
+| `POST`       | `/book_loan/create/unregistered/`    | Unregistered user creates a new book loan                                              | AllowAny                         | :heavy_check_mark: |
+| `PUT`        | `/book_loan/<int:id>/loan/`          | Update book loan - for adding librarian that loans book loan specified by `<int:id>`   | IsAdministrator \|\| IsLibrarian | :heavy_check_mark: |
+| `PUT`        | `/book_loan/<int:id>/receive/`       | Update book loan - for adding librarian that receives book loan specified by `<int:id>`| IsAdministrator \|\| IsLibrarian |                    |
+| `PUT`        | `bookloan/<int:id>/fine/<int:fine>/` | Update book loan - for adding fine to a book loan specified by `<int:id>`              | IsAdministrator \|\| IsLibrarian |                    |
 ### Voting
 | Request type | API Endpoint               | Description                                                    | Permission                                          | Implemented |
 |--------------|----------------------------|----------------------------------------------------------------|-----------------------------------------------------|-------------|

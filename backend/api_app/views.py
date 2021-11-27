@@ -1057,26 +1057,49 @@ def receiveLoan(request, id):
     }, status=status.HTTP_200_OK)
 
 ## Add fine to a BookLoan
-#@swagger_auto_schema(
-#    tags=["Book Loan"],
-#    method="PUT",
-#    operation_description="Adds or updates a fine for BookLoan specified by id",
-#    responses=loanGetResponses # TODO: update for put request
-#)
-#@api_view(['PUT'])
-#@permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
-#def updateLoan(request, id):
-#    bookloan = BookLoan.objects.get(id=id)
-#    serializer = BookLoanSerializer(bookloan, data=request.data)
-#    if serializer.is_valid():
-#        serializer.save()
-#        return Response({
-#            "status": "success",
-#            "BookLoan": BookLoanSerializer(bookloan).data
-#            }, status=status.HTTP_200_OK)
-#    return Response(
-#        serializer.errors,
-#        status=status.HTTP_400_BAD_REQUEST)
+bookLoanPutResponses = {
+    "200": openapi.Response(
+        description="Book loan updated!",
+        examples={
+            "application/json": {
+                "status": "success",
+                "user": "<bookloan_data>"
+            }
+        }
+    ),
+    "401": openapi.Response(
+        description="Unauthorized to get book loan details",
+        examples={
+            "application/json": {
+                "detail": "Authentication credentials were not provided."
+            }
+        }
+    ),
+    "404": openapi.Response(
+        description="Book loan not found!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    )
+}
+@swagger_auto_schema(
+    tags=["Book Loan"],
+    method="PUT",
+    operation_description="Adds or updates a fine for BookLoan specified by id",
+    responses=bookLoanPutResponses
+)
+@api_view(['PUT'])
+@permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
+def updateLoan(request, id, fine):
+    loan = get_object_or_404(BookLoan, id=id)
+    loan.fine = loan.fine + fine
+    loan.save()
+    return Response({
+        "status": "success"
+    }, status=status.HTTP_200_OK)
 # =====================================================================================================================
 
 # VotingAPI ===========================================================================================================

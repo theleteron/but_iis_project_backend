@@ -60,7 +60,7 @@ class BookLoan(models.Model):
     date_from           = models.DateTimeField()
     date_to             = models.DateTimeField()
     extension_to        = models.DateTimeField(null=True)
-    fine                = models.FloatField(default=0)
+    fine                = models.IntegerField(default=0)
     books               = models.ManyToManyField(Book)
 
 class Voting(models.Model):

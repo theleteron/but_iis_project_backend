@@ -208,7 +208,7 @@ class BookLoanSerializer(serializers.ModelSerializer):
     date_from               = serializers.DateTimeField()
     date_to                 = serializers.DateTimeField()
     extension_to            = serializers.DateTimeField(allow_null=True)
-    fine                    = serializers.FloatField(default=0)
+    fine                    = serializers.IntegerField(default=0)
     books                   = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
