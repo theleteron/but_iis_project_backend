@@ -12,7 +12,7 @@ User = get_user_model()
 # Serializer for Library model
 class LibrarySerializer(serializers.ModelSerializer):
     name                    = serializers.CharField(max_length=200)
-    description             = serializers.CharField(max_length=255)
+    description             = serializers.CharField(max_length=255, blank=True)
     city                    = serializers.CharField(max_length=200)
     street                  = serializers.CharField(max_length=200)
     zip_code                = serializers.IntegerField()
@@ -27,8 +27,8 @@ class LibrarySerializer(serializers.ModelSerializer):
 # Serializer for Publication model
 class PublicationSerializer(serializers.ModelSerializer):
     name                    = serializers.CharField(max_length=50)
-    series                  = serializers.CharField(max_length=50)
-    synopsis                = serializers.CharField(max_length=255)
+    series                  = serializers.CharField(max_length=50, blank=True)
+    synopsis                = serializers.CharField(max_length=4096)
     authors                 = serializers.CharField(max_length=255)
     language                = serializers.CharField(max_length=50)
     ISBN                    = serializers.CharField(max_length=20)
@@ -38,7 +38,7 @@ class PublicationSerializer(serializers.ModelSerializer):
     pages                   = serializers.IntegerField()
     tags                    = serializers.CharField(max_length=255)
     rating                  = serializers.FloatField()
-    availiable_at           = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    available_at           = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Publication
@@ -156,6 +156,13 @@ class BookOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookOrder
         fields = ('__all__')
+
+# Serializer for Voting model
+class VotingSerializer(serializers.ModelSerializer):
+    library                 = serializers.PrimaryKeyRelatedField(read_only=True)
+    publication             = serializers.PrimaryKeyRelatedField(read_only=True)
+    votes                   = serializers.IntegerField()
+
 # =====================================================================================================================
 
 

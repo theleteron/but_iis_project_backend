@@ -57,8 +57,8 @@ CREATE TABLE Publication (
     ID INT AUTO_INCREMENT,
     Name VARCHAR(50) UNIQUE NOT NULL,
     Series VARCHAR(50),
-    Synopsis VARCHAR(255),
-    `Author/s` VARCHAR(50) NOT NULL,
+    Synopsis VARCHAR(4096),
+    `Author/s` VARCHAR(255) NOT NULL,
     Language VARCHAR(20) NOT NULL,
     ISBN DECIMAL(20,0) NOT NULL,
     `Date of publication` DATE,
@@ -77,7 +77,7 @@ CREATE TABLE Book (
     `Condition` SET('New', 'Used', 'Damaged', 'Disposed'),
     Section INT(3),
     PRIMARY KEY (ID),
-    FOREIGN KEY (`Library ID`) REFERENCES Library(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (`Library ID`)     REFERENCES Library(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (`Publication ID`) REFERENCES Publication(ID) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE `Order` (
     Price NUMERIC(10,2),
     PRIMARY KEY (ID),
     FOREIGN KEY (`Library ID`) REFERENCES Library(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (`User ID`) REFERENCES User(ID) ON UPDATE CASCADE ON DELETE RESTRICT
+    FOREIGN KEY (`User ID`)    REFERENCES User(ID) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE `Publication-Order table` (
@@ -98,7 +98,7 @@ CREATE TABLE `Publication-Order table` (
     `Publication ID` INT,
     `Number of books` INT(4) NOT NULL ,
     `Price per book` NUMERIC(6,2) NOT NULL,
-    FOREIGN KEY (`Order ID`) REFERENCES `Order`(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (`Order ID`)       REFERENCES `Order`(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (`Publication ID`) REFERENCES Publication(ID) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
@@ -117,9 +117,9 @@ CREATE TABLE `Book loan` (
     `Book 4` INT,
     `Book 5` INT,
     PRIMARY KEY (ID),
-    FOREIGN KEY (Loans) REFERENCES User(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (Loans)    REFERENCES User(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (Receives) REFERENCES User(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (Creates) REFERENCES User(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (Creates)  REFERENCES User(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (`Book 1`) REFERENCES Book(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (`Book 2`) REFERENCES Book(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (`Book 3`) REFERENCES Book(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -127,12 +127,22 @@ CREATE TABLE `Book loan` (
     FOREIGN KEY (`Book 5`) REFERENCES Book(ID) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
+CREATE TABLE Voting (
+    ID INT AUTO_INCREMENT,
+    `Library ID` INT,
+    `Publication ID` INT,
+    `Number of votes` INT,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (Library)     REFERENCES Library(ID) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (Publication) REFERENCES Publication(ID) ON UPDATE CASCADE ON DELETE RESTRICT
+)
+
 INSERT INTO Library VALUES (1,'Library_01','Brno',60200,'Beethovenova 10','Our first Library');
 INSERT INTO Library(Name, City, `Zip code`, Street, Description) VALUES ('Library_02','Breclav',69002,'U splavu 4','Our second Library');
 INSERT INTO Library(Name, City, `Zip code`, Street) VALUES ('Library_03','Brno',60200,'Buresova 16');
 
 INSERT INTO Publication(name, series, synopsis, `author/s`, language, isbn, `date of publication`, publisher, genre, pages, tags, rating)
-    VALUES ('The Fellowship of the Ring', 'The Lord of the Rings', 'The first volume in J.R.R. Tolkien\'s epic adventure THE LORD OF THE RINGS One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them' , 'J.R.R. Tolkien', 'EN', 9780547928210, DATE '2009-04-20', 'HarperCollins', 'Fantasy' , 433, 'lotr, middleearth, thehobbit, jrrtolkien, hobbit, gandalf, aragorn, legolas, sauron, frodo, elves, elf, gondor, gimli, gollum, mordor, mirkwood', 87);
+    VALUES ('The Fellowship of the Ring', 'The Lord of the Rings', 'The first volume in J.R.R. Tolkien`s epic adventure THE LORD OF THE RINGS One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them' , 'J.R.R. Tolkien', 'EN', 9780547928210, DATE '2009-04-20', 'HarperCollins', 'Fantasy' , 433, 'lotr, middleearth, thehobbit, jrrtolkien, hobbit, gandalf, aragorn, legolas, sauron, frodo, elves, elf, gondor, gimli, gollum, mordor, mirkwood', 87);
 INSERT INTO Publication(name, series, synopsis, `author/s`, language, isbn, `date of publication`, publisher, genre, pages, tags, rating)
     VALUES ('The Two Towers', 'The Lord of the Rings', 'The awesome conclusion to The Lord of the Rings—the greatest fantasy epic of all time—which began in The Fellowship of the Ring and The Two Towers.' , 'J.R.R. Tolkien', 'EN', 9780547952024, DATE '2009-04-20', 'HarperCollins ', 'Fantasy' , 352, 'lotr, middleearth, thehobbit, jrrtolkien, hobbit, gandalf, aragorn, legolas, sauron, frodo, elves, elf, gondor, gimli, gollum, mordor, mirkwood', 93);
 INSERT INTO Publication(name, `author/s`, language, isbn) VALUES ('Karanténa s moderním fotrem', 'Dominik Landsman', 'CZ',9788024945798);

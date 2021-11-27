@@ -10,11 +10,12 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from knox.models import AuthToken
 from .permissions import IsAdministrator, IsDistributor, IsLibrarian, IsRegistredReader
-from .serializers import AdminKeySerializer, BookLoanCreateSerializer, BookLoanSerializer, BookSerializer, LibrarySerializer, \
-    PublicationOrderCreateByAdmin, PublicationOrderCreateByLibrarian, PublicationOrderSerializer,   \
-    PublicationSerializer, UserSerializer, UserNormalEditSerializer, UserAdminEditSerializer,       \
-    LoginSerializer, RegisterSerializer
-from .models import Book, BookLoan, BookOrder, Library, Account, Publication, PublicationOrder
+from .serializers import AdminKeySerializer, BookLoanCreateSerializer, BookLoanSerializer, BookSerializer, \
+    LibrarySerializer, \
+    PublicationOrderCreateByAdmin, PublicationOrderCreateByLibrarian, PublicationOrderSerializer, \
+    PublicationSerializer, UserSerializer, UserNormalEditSerializer, UserAdminEditSerializer, \
+    LoginSerializer, RegisterSerializer, VotingSerializer
+from .models import Book, BookLoan, BookOrder, Library, Account, Publication, PublicationOrder, Voting
 
 # LibraryAPI ==========================================================================================================
 ## Get Library (either specified or all)
@@ -380,7 +381,7 @@ def updatePublication(request, id):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-## Make Publication availiable at Library
+## Make Publication available at Library
 publicationPostUserResponse = {
     "200": openapi.Response(
         description="Publication successfully associated with a library!",
@@ -433,7 +434,7 @@ def associatePublicationWithLibrary(request, id, lid):
             "status": "error",
             "data": "Failed to get library.",
         }, status=status.HTTP_400_BAD_REQUEST)
-    publication.availiable_at.add(library)
+    publication.available_at.add(library)
     publication.save()
     return Response({
         "status": "success",
@@ -1064,6 +1065,86 @@ def confirmLoan(request, id):
 #    return Response(
 #        serializer.errors,
 #        status=status.HTTP_400_BAD_REQUEST)
+# =====================================================================================================================
+
+# VotingAPI ===========================================================================================================
+## Get Voting (either specified by id or all)
+votingGetResponses = {
+    "200": openapi.Response(
+        description="Retrieval of voting information OK.",
+        examples={
+            "application/json": {
+            "status": "success",
+            "data": "<voting_serialized_data>"
+            }
+        }
+    ),
+    "401": openapi.Response(
+        description="Unauthorized!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    ),
+    "404": openapi.Response(
+        description="Voting not found!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    )
+}
+
+
+@swagger_auto_schema(
+    tags=["Voting"],
+    method="GET",
+    operation_description="Returns list of all voting in the system or just one specified by an id",
+    responses=votingGetResponses
+)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def getVoting(request, id=None):
+    if id:
+        item = get_object_or_404(Voting, pk=id)
+        serializer = VotingSerializer(item)
+        return Response({
+            "status": "success",
+            "data": serializer.data
+        }, status=status.HTTP_200_OK)
+    items = Voting.objects.all()
+    serializer = VotingSerializer(items, many=True)
+    return Response({
+        "status": "success",
+        "data": serializer.data
+    }, status=status.HTTP_200_OK)
+
+## Get voting in a specificied by library id
+@swagger_auto_schema(
+    tags=["Voting"],
+    method="GET",
+    operation_description="Returns list of all voting in the system for the library specified by library id",
+    responses=votingGetResponses
+)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def getLibraryVoting(request, id):
+    items = Voting.objects.filter(library=id)
+    if not items:
+        return Response({
+            "status": "error",
+            "data": "No voting found!"
+        }, status=status.HTTP_404_NOT_FOUND)
+    serializer = VotingSerializer(items, many=True)
+    return Response({
+        "status": "success",
+        "data": serializer.data
+    }, status=status.HTTP_200_OK)
+
 # =====================================================================================================================
 
 # UserAPI =============================================================================================================

@@ -16,7 +16,7 @@ class Library(models.Model):
 class Publication(models.Model):
     name                = models.CharField(max_length=50)
     series              = models.CharField(max_length=50)
-    synopsis            = models.CharField(max_length=255)
+    synopsis            = models.CharField(max_length=4096)
     authors             = models.CharField(max_length=255)
     language            = models.CharField(max_length=50)
     ISBN                = models.CharField(max_length=20, unique=True)
@@ -26,7 +26,7 @@ class Publication(models.Model):
     pages               = models.IntegerField()
     tags                = models.CharField(max_length=255)
     rating              = models.FloatField()
-    availiable_at       = models.ManyToManyField(Library)
+    available_at       = models.ManyToManyField(Library)
 
 class Book(models.Model):
     STATES = (
@@ -63,6 +63,10 @@ class BookLoan(models.Model):
     fine                = models.FloatField(default=0)
     books               = models.ManyToManyField(Book)
 
+class Voting(models.Model):
+    library             = models.ForeignKey('Library', on_delete=models.CASCADE)
+    publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
+    Votes               = models.IntegerField()
 
 ###
 #   USER DATA & MANAGMENT

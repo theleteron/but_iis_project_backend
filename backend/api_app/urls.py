@@ -10,7 +10,7 @@ from .views import confirmLoan, deliverOrder, UserLogin, UserRegistration, assoc
     getOrderUserSpecified, getPublication, getUser, getUserByID, editUser, editUserByID,        \
     getAllUsers, makeAdministrator, makeAdministratorUsingKey, makeDistributor, makeLibrarian,  \
     updateLibrary, updatePublication, makeRegistredUser, getBook, getBookInLibrary, updateBook, \
-    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID, createLoan #, loanBook, receiveBook
+    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID, createLoan, getVoting, getLibraryVoting #, loanBook, receiveBook, , createVoting, vote
 
 # API Open Documentation
 schema_view = get_schema_view(
@@ -111,8 +111,13 @@ urlpatterns = [
     path('bookloan/user/', getLoanUser),
     path('bookloan/user/<int:id>/', getLoanUserByID),
     path('bookloan/create/', createLoan),
-    #path('bookloan/create/unregistered/', createLoanUnregistered),
     path('bookloan/<int:id>/loan/', confirmLoan),        # librarian loans book/s: book_loan.loans = account
     #path('bookloan/<int:id>/receive/', receiveBook),  # librarian receives book/s: book_loan.receives = account
     #path('bookloan/<int:id>/update/', updateLoan)
+    # Voting
+    path('voting/', getVoting),
+    path('voting/<int:id>/', getVoting),
+    path('voting/library/<int:id>/', getLibraryVoting),
+    #path('voting/create/', createVoting),
+    #path('voting/vote/<int:id>`, vote)
 ]
