@@ -253,6 +253,8 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
         book_loan.date_from = validated_data['date_from']
         book_loan.date_to = validated_data['date_to']
         book_ids = validated_data.pop('books',None)
+        if len(book_ids) == 0:
+            raise ValueError
         # Check if all the books are from the same library
         library = None
         for id in book_ids:
