@@ -37,7 +37,7 @@ class PublicationSerializer(serializers.ModelSerializer):
     genre                   = serializers.CharField(max_length=50)
     pages                   = serializers.IntegerField()
     tags                    = serializers.CharField(max_length=255)
-    rating                  = serializers.DecimalField(default=0, read_only=True)
+    rating                  = serializers.DecimalField(max_digits=3, decimal_places=1, default=0, read_only=True)
     rated_sum               = serializers.IntegerField(default=0, read_only=True)
     rated_times             = serializers.IntegerField(default=0, read_only=True)
     available_at            = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
