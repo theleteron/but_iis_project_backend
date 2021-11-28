@@ -187,7 +187,7 @@ class Voting(models.Model):
     library             = models.ForeignKey('Library', on_delete=models.CASCADE)
     publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
     users               = models.ManyToManyField(Account)
-    votes               = models.IntegerField()
+    votes               = models.IntegerField(default=0)
     completed           = models.BooleanField(default=False)
 
 class OpeningHours(models.Model):

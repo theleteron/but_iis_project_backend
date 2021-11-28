@@ -162,10 +162,10 @@ class BookOrderSerializer(serializers.ModelSerializer):
 
 # Serializer for Voting model
 class VotingSerializer(serializers.ModelSerializer):
-    library                 = serializers.PrimaryKeyRelatedField(read_only=True)
-    publication             = serializers.PrimaryKeyRelatedField(read_only=True)
-    votes                   = serializers.IntegerField(default=0)
-    completed               = serializers.BooleanField(default=False)
+    library                 = serializers.PrimaryKeyRelatedField(queryset=Library.objects.all())
+    publication             = serializers.PrimaryKeyRelatedField(queryset=Library.objects.all())
+    votes                   = serializers.IntegerField(default=0, read_only=True)
+    completed               = serializers.BooleanField(default=False, read_only=True)
 
     class Meta:
         model = Voting

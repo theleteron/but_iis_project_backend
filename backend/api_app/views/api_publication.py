@@ -269,11 +269,23 @@ def createPublication(request):
     """
     serializer = PublicationSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response({
-            "status": "success",
-            "data": serializer.data
-        }, status=status.HTTP_200_OK)
+        try:
+            publication = serializer.save()
+        except Exception as e:
+            return Response({
+                "status": "error",
+                "data": e.args
+            }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            for library in Library.objects.all():
+                new_voting = Voting()
+                new_voting.library = library
+                new_voting.publication = publication
+                new_voting.save()
+            return Response({
+                "status": "success",
+                "data": serializer.data
+            }, status=status.HTTP_200_OK)
     else:
         return Response({
             "status": "error",
@@ -458,12 +470,12 @@ def associatePublicationWithLibrary(request, id, lid):
         }, status=status.HTTP_401_UNAUTHORIZED)
     publication.available_at.add(library)
     publication.save()
-    # Create voting when publication is added to a library
-    new_voting = Voting()
-    new_voting.library = library
-    new_voting.publication = publication
-    new_voting.votes = 0
-    new_voting.save()
+    ## Create voting when publication is added to a library
+    #new_voting = Voting()
+    #new_voting.library = library
+    #new_voting.publication = publication
+    #new_voting.votes = 0
+    #new_voting.save()
     return Response({
         "status": "success",
         "data": PublicationSerializer(publication).data

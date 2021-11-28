@@ -174,7 +174,7 @@ def createVoting(request):
 """
 votingPutResponses = {
     "200": openapi.Response(
-        description="Voteing updated!",
+        description="Voting updated!",
         examples={
             "application/json": {
                 "status": "success"
