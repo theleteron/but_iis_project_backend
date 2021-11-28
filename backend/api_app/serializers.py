@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.models.expressions import Value
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from .models import Account, Library, OpeningHours, Publication, Book, PublicationOrder, BookOrder, BookLoan, Voting
@@ -15,7 +16,7 @@ class LibrarySerializer(serializers.ModelSerializer):
     description             = serializers.CharField(max_length=255, allow_null=True)
     city                    = serializers.CharField(max_length=200)
     street                  = serializers.CharField(max_length=200)
-    zip_code                = serializers.IntegerField()
+    zip_code                = serializers.CharField(max_length=5)
 
     class Meta:
         model = Library
@@ -160,15 +161,19 @@ class BookOrderSerializer(serializers.ModelSerializer):
 
 # Serializer for Voting model
 class VotingSerializer(serializers.ModelSerializer):
-    library                 = serializers.PrimaryKeyRelatedField(read_only=True)
-    publication             = serializers.PrimaryKeyRelatedField(read_only=True)
-    User                    = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    votes                   = serializers.IntegerField()
-    complete                = serializers.BooleanField(default=False)
+    library                 = serializers.IntegerField()
+    publication             = serializers.IntegerField()
+    votes                   = serializers.IntegerField(default=0)
+    completed               = serializers.BooleanField(default=False)
 
     class Meta:
         model = Voting
-        fields = ('__all__')
+        fields = (
+            'library', 
+            'publication', 
+            'votes', 
+            'completed'
+        )
 
 class OpeningHoursCreateSerializer(serializers.ModelSerializer):
     day                     = serializers.ListField(
@@ -231,6 +236,17 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
         book_loan.date_to = validated_data['date_to']
         book_loan.save()
         book_ids = validated_data.pop('books',None)
+        # Check if all the books are from the same library
+        library = None
+        for id in book_ids:
+            book = get_object_or_404(Book, id=id)
+            if library is None:
+                library = book.library
+            if library is not book.library:
+                raise ValueError
+        book_loan.library = library
+        book_loan.save()
+        # Check if books are availiable and add them to bookloan
         for id in book_ids:
             book = get_object_or_404(Book, id=id)
             if book.loaned or book.reserverd:

@@ -1,18 +1,11 @@
 from django.urls import path
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
-from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from drf_yasg.utils import swagger_auto_schema
 from knox import views as knox_views
-from .views import confirmLoan, deliverOrder, UserLogin, UserRegistration, associateLibrarianToLibrary,      \
-    associatePublicationWithLibrary, createLibrary, createOrder, createPublication, deleteUser, \
-    deleteUserByID, getLibrary, getOrder, getOrderDelivered, getOrderLibrarySpecified,          \
-    getOrderUserSpecified, getPublication, getUser, getUserByID, editUser, editUserByID,        \
-    getAllUsers, makeAdministrator, makeAdministratorUsingKey, makeDistributor, makeLibrarian,  \
-    updateLibrary, updatePublication, makeRegistredUser, getBook, getBookInLibrary, updateBook, \
-    getLoan, getLoanInLibrary, getLoanUser, getLoanUserByID, createLoan, getVoting, getLibraryVoting, \
-    receiveLoan, updateLoan, setOpeningHoursLibrary, getOpeningHoursLibrary, ratePublication, getPublicationInLibrary, \
-    createVoting, vote, getPublicationsInLibrary, voteEnd
+
+from api_app.views import *
 
 # API Open Documentation
 schema_view = get_schema_view(

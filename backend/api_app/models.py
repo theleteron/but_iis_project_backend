@@ -12,7 +12,7 @@ class Library(models.Model):
     # Address
     city                = models.CharField(max_length=255)
     street              = models.CharField(max_length=255)
-    zip_code            = models.IntegerField()
+    zip_code            = models.CharField(max_length=5)
 
 ###
 #   USER DATA & MANAGMENT
@@ -168,6 +168,7 @@ class BookLoan(models.Model):
     user                = models.ForeignKey('Account', related_name="creator", on_delete=models.RESTRICT)
     loans               = models.ForeignKey('Account', related_name="lender", on_delete=models.RESTRICT, null=True)
     receives            = models.ForeignKey('Account', related_name="receiver", on_delete=models.RESTRICT, null=True)
+    library             = models.ForeignKey('Library', on_delete=models.RESTRICT)
     date_from           = models.DateTimeField()
     date_to             = models.DateTimeField()
     extension_to        = models.DateTimeField(null=True)
