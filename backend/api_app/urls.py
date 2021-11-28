@@ -121,5 +121,6 @@ urlpatterns = [
     path('voting/library/<int:id>/', getLibraryVoting),
     path('voting/create/', createVoting),
     path('voting/vote/<int:id>/', vote),
-    path('voting/end/<int:id>/', voteEnd)
+    path('voting/end/<int:id>/', voteEnd),
+    path('voting/delete/<int:id>/', voteDelete),
 ]

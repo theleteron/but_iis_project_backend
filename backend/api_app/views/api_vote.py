@@ -254,9 +254,9 @@ def vote(request, id):
 )
 @api_view(['PUT'])
 @permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
-def voteEnd(request, id):
+def voteDelete(request, id):
     """
-        Function that allows users with selected roles end voting
+        Function that allows users with selected roles delete voting
     """
     voting = get_object_or_404(Voting, id=id)
     voting.completed=True
@@ -271,4 +271,68 @@ def voteEnd(request, id):
         "status": "success",
         "data": VotingSerializer(voting).data
     }, status=status.HTTP_200_OK)
+# ==================================================================================================
+
+# ====================================== Delete a voting ===========================================
+"""
+    Schema for the possible responses to a delete request for a vote
+"""
+votingDeleteResponses = {
+    "200": openapi.Response(
+        description="Voting deleted!",
+        examples={
+            "application/json": {
+                "status": "success"
+            }
+        }
+    ),
+    "400": openapi.Response(
+        description="Invalid data format.",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    ),
+    "401": openapi.Response(
+        description="Unauthorized to do the operation.",
+        examples={
+            "application/json": {
+                "detail": "Authentication credentials were not provided."
+            }
+        }
+    ),
+    "404": openapi.Response(
+        description="Voting not found!",
+        examples={
+            "application/json": {
+                "status": "error",
+                "data": "<error_details>"
+            }
+        }
+    )
+}
+"""
+    Settings for Swagger OpenAPI documentation
+"""
+@swagger_auto_schema(
+    tags=["Voting"],
+    method="DELETE",
+    operation_description="Allows administrator to delete voting",
+    responses=votingDeleteResponses
+)
+@api_view(['DELETE'])
+@permission_classes([And(IsAuthenticated, IsAdministrator)])
+def voteEnd(request, id):
+    """
+        Function that allows administrator to end voting
+    """
+    voting = get_object_or_404(Voting, id=id).delete()
+    # Create new voting after ending the last one
+    return Response({
+        "status": "success",
+        "data": VotingSerializer(voting).data
+    }, status=status.HTTP_200_OK)
+
 # ==================================================================================================

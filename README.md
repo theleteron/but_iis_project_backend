@@ -61,8 +61,8 @@ All endpoints are prefixed by `/api` -> full endpoint address is then `<your_dom
 | `GET`        	| `/users/`                          	| Returns list of all users                                                                                                                     	| IsAdministrator \|\| IsLibrarian                    	|
 | `PUT`      	| `/user/edit/`                      	| Allow user to change his details (address, phone, etc..)                                                                                      	| IsAuthenticated                                     	|
 | `PUT`      	| `/user/edit/<int:id>/`             	| Change user information for user specified by `<int:id>`, this also allows administrator to promote user to Librarian, etc...                 	| IsAdministrator                                     	|
-| `POST`       	| `/user/delete/`                    	| Deactivates user account                                                                                                                      	| IsAuthenticated                                     	|
-| `POST`       	| `/user/delete/<int:id>/`           	| Deactivates user account for user specified by `<int:id>`                                                                                     	| IsAdministrator                                     	|
+| `DELETE`     	| `/user/delete/`                    	| Deactivates user account                                                                                                                      	| IsAuthenticated                                     	|
+| `DELETE`     	| `/user/delete/<int:id>/`           	| Deactivates user account for user specified by `<int:id>`                                                                                     	| IsAdministrator                                     	|
 ### Library
 | Request type 	| API Endpoint                       	| Description                                                                                                                                   	| Permission                                          	|
 |--------------	|------------------------------------	|-----------------------------------------------------------------------------------------------------------------------------------------------	|-----------------------------------------------------	|
@@ -115,11 +115,12 @@ All endpoints are prefixed by `/api` -> full endpoint address is then `<your_dom
 | `POST`       | `/book_loan/<int:id>/receive/`       | Librarian receives book/s in book loan specified by `<int:id>`                         | IsAdministrator \|\| IsLibrarian |
 | `PUT`        | `bookloan/<int:id>/fine/<int:fine>/` | Update book loan - for adding fine to a book loan specified by `<int:id>`              | IsAdministrator \|\| IsLibrarian |
 ### Voting
-| Request type | API Endpoint               | Description                                                    | Permission                                          |
-|--------------|----------------------------|----------------------------------------------------------------|-----------------------------------------------------|
-| `GET`        | `/voting/`                 | Returns list of all voting in the system                       | AllowAny                                            |
-| `GET`        | `/voting/<int:id>`         | Returns voting specified by `<int:id>`                         | AllowAny                                            |
-| `GET`        | `/voting/library/<int:id>` | Returns list of all voting in library specified by `<int:id>`  | AllowAny                                            |
-| `POST`       | `/voting/create/`          | Manually creates a new voting                                  | IsAdministrator \|\| IsLibrarian                    |
-| `PUT`        | `/voting/vote/<int:id>`    | Adds vote to the voting specified by `<int:id>`                | IsAuthenticated                                     |
-| `PUT`        | `/voting/end/<int:id>/`    | Allows user to end voting, also automatically creates a new one | IsAdministrator \|\| IsLibrarian                   |
+| Request type | API Endpoint               | Description                                                     | Permission                                          |
+|--------------|----------------------------|-----------------------------------------------------------------|-----------------------------------------------------|
+| `GET`        | `/voting/`                 | Returns list of all voting in the system                        | AllowAny                                            |
+| `GET`        | `/voting/<int:id>`         | Returns voting specified by `<int:id>`                          | AllowAny                                            |
+| `GET`        | `/voting/library/<int:id>` | Returns list of all voting in library specified by `<int:id>`   | AllowAny                                            |
+| `POST`       | `/voting/create/`          | Manually creates a new voting                                   | IsAdministrator \|\| IsLibrarian                    |
+| `PUT`        | `/voting/vote/<int:id>`    | Adds vote to the voting specified by `<int:id>`                 | IsAuthenticated                                     |
+| `PUT`        | `/voting/end/<int:id>/`    | Allows user to end voting, also automatically creates a new one | IsAdministrator \|\| IsLibrarian                    |
+| `DELETE`     | `/voting/delete/<int:id>/` | Allows administrator to end voting                              | IsAdministrator                                     |
