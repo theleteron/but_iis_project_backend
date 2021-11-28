@@ -501,6 +501,10 @@ def ratePublication(request, id, rate):
               multiple times
     """
     publication = get_object_or_404(Publication, id=id)
+    if rate < 0 or rate > 10:
+        return Response({
+            "status": "rate out of range",
+        }, status=status.HTTP_406_NOT_ACCEPTABLE)
     publication.rating = (publication.rated_sum + rate) / (publication.rated_times + 1)
     publication.rated_times += 1
     publication.rated_sum += rate

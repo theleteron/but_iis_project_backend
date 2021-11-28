@@ -133,7 +133,7 @@ class Publication(models.Model):
     genre               = models.CharField(max_length=50)
     pages               = models.IntegerField()
     tags                = models.CharField(max_length=255)
-    rating              = models.FloatField(default=0)
+    rating              = models.DecimalField(max_digits=3, decimal_places=1, default=0)
     rated_sum           = models.IntegerField(default=0)
     rated_times         = models.IntegerField(default=0)
     available_at        = models.ManyToManyField(Library)
