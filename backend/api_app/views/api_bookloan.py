@@ -141,8 +141,13 @@ def getLoanUserByID(request, id):
         Function that allows user with Administrator or Librarian role to list bookloans made by user.
         This function expects user to be logged in.
     """
-    items = get_object_or_404(BookLoan, user=id)
-    serializer = BookLoanSerializer(items)
+    items = BookLoan.objects.filter(user=id)
+    if not items:
+        return Response({
+            "status": "error",
+            "data": "Book loan for a user not found!"
+        }, status=status.HTTP_404_NOT_FOUND) 
+    serializer = BookLoanSerializer(items, many=True)
     return Response({
         "status": "success",
         "data": serializer.data
@@ -166,8 +171,13 @@ def getLoanUser(request):
         Function that allows user to list bookloans he made.
         This function expects user to be logged in.
     """
-    items = get_object_or_404(BookLoan, user=request.user)
-    serializer = BookLoanSerializer(items)
+    items = BookLoan.objects.filter(user=request.user)
+    if not items:
+        return Response({
+            "status": "error",
+            "data": "Book loan for a user not found!"
+        }, status=status.HTTP_404_NOT_FOUND) 
+    serializer = BookLoanSerializer(items, many=True)
     return Response({
         "status": "success",
         "data": serializer.data

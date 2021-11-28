@@ -17,7 +17,7 @@ schema_view = get_schema_view(
       contact=openapi.Contact(name="🏫 IIS Library Project Team", url="https://iis.czleteron.net/team/"),
       license=openapi.License(name="⚖️ MIT License", url="https://iis.czleteron.net/license/"),
    ),
-   #url='https://iis.czleteron.net/api/',
+   url='https://iis.czleteron.net/api/',
    public=True,
    permission_classes=[permissions.AllowAny],
 )
@@ -119,6 +119,6 @@ urlpatterns = [
     path('voting/<int:id>/', getVoting),
     path('voting/library/<int:id>/', getLibraryVoting),
     path('voting/create/', createVoting),
-    path('voting/vote/<int:id>', vote),
-    path('voting/end/<int:id>', voteEnd)
+    path('voting/vote/<int:id>/', vote),
+    path('voting/end/<int:id>/', voteEnd)
 ]

@@ -94,7 +94,7 @@ def getLibraryVoting(request, id):
     """
         Function that allows users to list votings in specified library
     """
-    items = Voting.objects.filter(library=id)
+    items = Voting.objects.filter(library=id).filter(completed=False)
     if not items:
         return Response({
             "status": "error",
