@@ -197,7 +197,7 @@ def getPublicationsInLibrary(request, lid):
         Function that allows users to check publications in selected library
     """
     items = Publication.objects.filter(available_at=lid)
-    if items is None:
+    if not items:
         return Response({
             "status": "error"
         }, status=status.HTTP_404_NOT_FOUND)
