@@ -9,7 +9,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from api_app.models import Account, Book, BookLoan, Library, WaitingList
 from api_app.permissions import IsAdministrator, IsLibrarian
-from api_app.serializers import BookLoanCreateSerializer, BookLoanSerializer
+from api_app.serializers import BookLoanCreateSerializer, BookLoanSerializer, WaitingListSerializer
 
 """
     Schema for the possisble responses to a request for an bookloan information
@@ -82,10 +82,13 @@ def getLoan(request, id=None):
             "data": serializer.data
         }, status=status.HTTP_200_OK)
     items = BookLoan.objects.all()
+    waits = WaitingList.objects.all()
     serializer = BookLoanSerializer(items, many=True)
+    serializer_w = WaitingListSerializer(waits, many=True)
     return Response({
         "status": "success",
-        "data": serializer.data
+        "data": serializer.data,
+        "additional": serializer_w.data
     }, status=status.HTTP_200_OK)
 # ==================================================================================================
 
@@ -112,15 +115,18 @@ def getLoanInLibrary(request, id):
             "data": "Librarian doesn't have access to this Library!"
         }, status=status.HTTP_401_UNAUTHORIZED) 
     items = BookLoan.objects.filter(library=id)
+    waits = WaitingList.objects.filter(library=id)
     if not items:
         return Response({
             "status": "error",
             "data": "Book loan for library not found!"
         }, status=status.HTTP_404_NOT_FOUND) 
     serializer = BookLoanSerializer(items, many=True)
+    serializer_w = WaitingListSerializer(waits, many=True)
     return Response({
         "status": "success",
-        "data": serializer.data
+        "data": serializer.data,
+        "additional": serializer_w.data
     }, status=status.HTTP_200_OK)
 # ==================================================================================================
 
@@ -142,15 +148,18 @@ def getLoanUserByID(request, id):
         This function expects user to be logged in.
     """
     items = BookLoan.objects.filter(user=id)
-    if not items:
+    waits = WaitingList.objects.filter(user=id)
+    if not items and not waits:
         return Response({
             "status": "error",
             "data": "Book loan for a user not found!"
         }, status=status.HTTP_404_NOT_FOUND) 
     serializer = BookLoanSerializer(items, many=True)
+    serializer_w = WaitingListSerializer(waits, many=True)
     return Response({
         "status": "success",
-        "data": serializer.data
+        "data": serializer.data,
+        "additional": serializer_w.data
     }, status=status.HTTP_200_OK)
 # ==================================================================================================
 
@@ -172,15 +181,18 @@ def getLoanUser(request):
         This function expects user to be logged in.
     """
     items = BookLoan.objects.filter(user=request.user)
-    if not items:
+    waits = WaitingList.objects.filter(user=request.user)
+    if not items and not waits:
         return Response({
             "status": "error",
             "data": "Book loan for a user not found!"
         }, status=status.HTTP_404_NOT_FOUND) 
     serializer = BookLoanSerializer(items, many=True)
+    serializer_w = WaitingListSerializer(waits, many=True)
     return Response({
         "status": "success",
-        "data": serializer.data
+        "data": serializer.data,
+        "additional": serializer_w.data
     }, status=status.HTTP_200_OK)
 # ==================================================================================================
 
