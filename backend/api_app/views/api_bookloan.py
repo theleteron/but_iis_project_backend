@@ -241,6 +241,11 @@ def createLoan(request):
             return Response({
                 "status": "waiting"
             }, status=status.HTTP_200_OK)
+        except ValueError:  
+            return Response({
+                "status": "error",
+                "data": "Invalid data! Probably books from different libraries!"
+            }, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({
                 "status": "success"
