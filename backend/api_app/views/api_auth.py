@@ -27,7 +27,7 @@ userRegisterResponses = {
                     "zip_code": "<string> # max 5 characters",
                     "country": "<string>",
                     "phone": "<null>",
-                    "role": "<int> # admin(4), librarian(3), distributor(2), registred(1), unregistred(0)",
+                    "role": "<int> # admin(4), librarian(3), distributor(2), registered(1), unregistered(0)",
                     "working_at": "<null>",
                     "date_joined": "<date_time>",
                     "last_login": "<date_time>"
@@ -52,7 +52,7 @@ userRegisterResponses = {
 @swagger_auto_schema(
     tags=["Authorization"],
     method="POST",
-    operation_description="Allows unregistred visitor to create account.",
+    operation_description="Allows unregistered visitor to create account.",
     request_body=RegisterSerializer,
     responses=userRegisterResponses,
     security=[]
@@ -95,7 +95,7 @@ userLoginResponses = {
                     "zip_code": "<string> # max 5 characters",
                     "country": "<string>",
                     "phone": "<null>",
-                    "role": "<int> # admin(4), librarian(3), distributor(2), registred(1), unregistred(0)",
+                    "role": "<int> # admin(4), librarian(3), distributor(2), registered(1), unregistered(0)",
                     "working_at": "<null>",
                     "date_joined": "<date_time>",
                     "last_login": "<date_time>"

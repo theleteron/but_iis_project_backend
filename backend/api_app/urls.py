@@ -64,7 +64,7 @@ urlpatterns = [
     path('admin/setrole/<int:id>/administrator/', makeAdministrator),
     path('admin/setrole/<int:id>/librarian/', makeLibrarian),
     path('admin/setrole/<int:id>/distributor/', makeDistributor),
-    path('admin/setrole/<int:id>/registred/', makeRegistredUser),
+    path('admin/setrole/<int:id>/registered/', makeRegisteredUser),
     # User
     path('user/', getUser),
     path('user/<int:id>/', getUserByID),

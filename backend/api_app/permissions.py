@@ -18,15 +18,15 @@ class IsDistributor(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.role == '2'
 
-class IsRegistredReader(permissions.BasePermission):
-    message = "User doesn't have role Registred Reader!"
+class IsRegisteredReader(permissions.BasePermission):
+    message = "User doesn't have role Registered Reader!"
 
     def has_permission(self, request, view):
         return request.user.role == '1'
 
 # This should be unreachable and unusable permission
-class IsNotRegistred(permissions.BasePermission):
-    message = "User is not unregistred!"
+class IsNotRegistered(permissions.BasePermission):
+    message = "User is not unregistered!"
 
     def has_permission(self, request, view):
         return request.user.role == '0'

@@ -29,7 +29,7 @@ adminPostResponses = {
                     "zip_code": "<string> # max 5 characters",
                     "country": "<string>",
                     "phone": "<null>",
-                    "role": "<int> # admin(4), librarian(3), distributor(2), registred(1), unregistred(0)",
+                    "role": "<int> # admin(4), librarian(3), distributor(2), registered(1), unregistered(0)",
                     "working_at": "<null>",
                     "date_joined": "<date_time>",
                     "last_login": "<date_time>"
@@ -187,21 +187,21 @@ def makeDistributor(request, id):
     }, status=status.HTTP_200_OK)
 # ==================================================================================================
 
-# =========================== Promote a user account to Registred User =============================
+# =========================== Promote a user account to Registered User =============================
 """
     Settings for Swagger OpenAPI documentation
 """
 @swagger_auto_schema(
     tags=["Administration"],
     method="POST",
-    operation_description="Allows users with Administrator role to change selected user's role to Registred User",
+    operation_description="Allows users with Administrator role to change selected user's role to Registered User",
     responses=adminPostResponses
 )
 @api_view(['POST'])
 @permission_classes([And(IsAuthenticated, IsAdministrator)])
-def makeRegistredUser(request, id):
+def makeRegisteredUser(request, id):
     """
-        Function that allows Administrator to promote a user to a Registred User.
+        Function that allows Administrator to promote a user to a Registered User.
         This function expects user that is logged in to be an Administrator.
     """
     user = get_object_or_404(Account, id=id)

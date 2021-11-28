@@ -88,8 +88,8 @@ class Account(AbstractBaseUser):
     phone           = models.CharField(max_length=15, null=True)
     # Access details
     ROLE_OPTIONS = (
-        (0, "Unregistred user"),
-        (1, "Registred reader"),
+        (0, "Unregistered user"),
+        (1, "Registered reader"),
         (2, "Distributor"),
         (3, "Librarian"),
         (4, "Administrator"),
