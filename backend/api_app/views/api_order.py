@@ -149,6 +149,11 @@ def getOrderDelivered(request, delivered, id=None):
     """
         Function that allows users with selected roles to list publication orders filtered by library and status.
     """
+    if delivered not in [0, 1]:
+            return Response({
+                "status": "error",
+                "data": "Delivered flag must be 0 (false) or 1 (true)!"
+            }, status=status.HTTP_400_BAD_REQUEST)
     if id:
         items = PublicationOrder.objects.filter(library=id).filter(delivered=delivered)
         if not items:
