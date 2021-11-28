@@ -179,6 +179,8 @@ class WaitingList(models.Model):
     user                = models.ForeignKey('Account', related_name="creator_waiting", on_delete=models.RESTRICT)
     library             = models.ForeignKey('Library', on_delete=models.RESTRICT)
     date_created        = models.DateTimeField(auto_now_add=True)
+    date_from           = models.DateTimeField()
+    date_to              = models.DateTimeField()
     books               = ArrayField(
         models.IntegerField()
     )

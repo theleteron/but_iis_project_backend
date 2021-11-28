@@ -7,9 +7,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from api_app.models import BookLoan, Library, WaitingList
+from api_app.models import Account, Book, BookLoan, Library, WaitingList
 from api_app.permissions import IsAdministrator, IsLibrarian
-from api_app.serializers import BookLoanCreateSerializer, BookLoanSerializer, WaitingListSerializer
+from api_app.serializers import BookLoanCreateSerializer, BookLoanSerializer
 
 """
     Schema for the possisble responses to a request for an bookloan information
@@ -228,7 +228,7 @@ bookLoanPostResponses = {
 )
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def createLoan(request):
+def createLoan(request, uid=None):
     """
         Function that allows user to create bew bookloans.
         This function expects user to be logged in.
@@ -236,7 +236,10 @@ def createLoan(request):
     serializer = BookLoanCreateSerializer(data=request.data)
     if serializer.is_valid():
         try:
-            serializer.save(creator=request.user)
+            if uid:
+                serializer.save(creator=get_object_or_404(Account, id=uid))
+            else:
+                serializer.save(creator=request.user)
         except ValidationError:
             return Response({
                 "status": "waiting"
@@ -302,6 +305,48 @@ def confirmLoan(request, id):
 # ==================================================================================================
 
 # ====================================== Receive a bookloan ========================================
+def checkListIfAvailable(list):
+    for id in list:
+        book = Book.objects.get(id=id)
+        if not book:
+            return False
+        if book.reserved or book.loaned:
+            return False
+    return True
+
+def checkListIfValid(list):
+    library = None
+    for id in list:
+        book = Book.objects.get(id=id)
+        if not book:
+            return False
+        if library is None:
+            library = book.library
+        if library.id != book.library.id:
+            return False
+    return True
+
+def checkWaitingList():
+    found_possible = False
+    waiting_list = WaitingList.objects.all().order_by('date_created')
+    for reservation in waiting_list:
+        if checkListIfAvailable(reservation.books) and checkListIfValid(reservation.books):
+            book_loan = BookLoan()
+            book_loan.user = reservation.user
+            book_loan.library = reservation.library
+            book_loan.date_from = reservation.date_from
+            book_loan.date_to = reservation.date_to
+            book_loan.save()
+            for id in reservation.books:
+                book = get_object_or_404(Book, id=id)
+                book.reserved = True
+                book_loan.books.add(book)
+                book.save()
+            book_loan.save()
+            reservation.delete()
+            found_possible = True
+    return found_possible
+
 """
     Settings for Swagger OpenAPI documentation
 """
@@ -337,9 +382,16 @@ def receiveLoan(request, id):
         book.reserved = False
         book.save()
     # TODO: Check WaitingList and create new bookloans if availiable
-    return Response({
-        "status": "success"
-    }, status=status.HTTP_200_OK)
+    if checkWaitingList():
+        return Response({
+            "status": "success",
+            "updated": "waiting_list",
+            "details": "Found new possible book loand and created it!"
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response({
+            "status": "success"
+        }, status=status.HTTP_200_OK)
 # ==================================================================================================
 
 # ================================== Add a fine to a bookloan ======================================

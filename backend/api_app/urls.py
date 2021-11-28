@@ -111,6 +111,7 @@ urlpatterns = [
     path('bookloan/user/', getLoanUser),
     path('bookloan/user/<int:id>/', getLoanUserByID),
     path('bookloan/create/', createLoan),
+    path('bookloan/create/for/<int:uid>', createLoan),
     path('bookloan/<int:id>/loan/', confirmLoan),
     path('bookloan/<int:id>/receive/', receiveLoan),
     path('bookloan/<int:id>/fine/<int:fine>/', updateLoan),

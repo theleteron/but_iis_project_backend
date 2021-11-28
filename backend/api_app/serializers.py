@@ -227,26 +227,8 @@ class WaitingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WaitingList
         fields = (
-            'date_from',
-            'date_to',
-            'books'
+            '__all__'
         )
-    
-    def create(self, validated_data):
-        wait_list = WaitingList()
-        wait_list.books = validated_data.pop('books', None)
-        library = None
-        book_ids = validated_data.pop('books',None)
-        for id in book_ids:
-            book = get_object_or_404(Book, id=id)
-            if library is None:
-                library = book.library
-            if library.id != book.library.id:
-                raise ValueError
-        wait_list.library = library
-        wait_list.user = validated_data['creator']
-        wait_list.save()
-        return wait_list
 
 # BookLoanAPI =========================================================================================================
 # Serializer for creating Bookloan
