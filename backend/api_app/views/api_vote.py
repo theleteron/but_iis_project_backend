@@ -228,7 +228,7 @@ def vote(request, id):
         return Response({
             "status": "not_availiable"
         },status=status.HTTP_404_NOT_FOUND)
-    if request.user in voting.user.all():
+    if request.user in voting.users.all():
         return Response({
             "status": "error",
             "data": "You have already voted!"
