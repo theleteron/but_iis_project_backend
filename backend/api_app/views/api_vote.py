@@ -331,8 +331,7 @@ def voteEnd(request, id):
     voting = get_object_or_404(Voting, id=id).delete()
     # Create new voting after ending the last one
     return Response({
-        "status": "success",
-        "data": VotingSerializer(voting).data
+        "status": "success"
     }, status=status.HTTP_200_OK)
 
 # ==================================================================================================
