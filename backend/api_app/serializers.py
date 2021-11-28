@@ -280,7 +280,7 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
         # Check if books are availiable and add them to bookloan
         for id in book_ids:
             book = get_object_or_404(Book, id=id)
-            if book.loaned or book.reserverd:
+            if book.loaned or book.reserved:
                 book_loan.delete()
                 wait_list = WaitingList()
                 wait_list.books = book_ids
@@ -289,7 +289,7 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
                 wait_list.save()
                 raise ValidationError("Already reserved or loaned! Added to waitlist!")
             else:
-                book.reserverd = True
+                book.reserved = True
                 book_loan.books.add(book)
                 book.save()
         book_loan.save()

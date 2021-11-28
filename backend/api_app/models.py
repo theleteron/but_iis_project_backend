@@ -149,7 +149,7 @@ class Book(models.Model):
     condition           = models.CharField(max_length=30, choices=STATES, default=1)
     section             = models.IntegerField()
     loaned              = models.BooleanField(default=False)
-    reserverd           = models.BooleanField(default=False)
+    reserved            = models.BooleanField(default=False)
 
 class PublicationOrder(models.Model):
     publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)

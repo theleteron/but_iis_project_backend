@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from api_app.models import BookLoan
+from api_app.models import BookLoan, Library, WaitingList
 from api_app.permissions import IsAdministrator, IsLibrarian
 from api_app.serializers import BookLoanCreateSerializer, BookLoanSerializer, WaitingListSerializer
 
@@ -106,7 +106,7 @@ def getLoanInLibrary(request, id):
         Function that allows user with Administrator or Librarian role to list bookloans in library.
         This function expects user to be logged in.
     """
-    if request.user.role == '3' and request.user.working_at != id:
+    if request.user.role == '3' and request.user.working_at != get_object_or_404(Library, id=id):
         return Response({
             "status": "error",
             "data": "Librarian doesn't have access to this Library!"
@@ -192,7 +192,7 @@ bookLoanPostResponses = {
         description="Creation or update of a book loan successfull!",
         examples={
             "application/json": {
-                "status": "success"
+                "status": "success or waiting"
             }
         }
     ),
@@ -270,7 +270,7 @@ def confirmLoan(request, id):
         This function expects user to be logged in.
     """
     loan = get_object_or_404(BookLoan, id=id)
-    if request.user.role == '3' and request.user.working_at is not loan.library:
+    if request.user.role == '3' and request.user.working_at != loan.library:
         return Response({
             "status": "error",
             "data": "Librarian doesn't have access to this Library!"
@@ -315,7 +315,7 @@ def receiveLoan(request, id):
         This function expects user to be logged in.
     """
     loan = get_object_or_404(BookLoan, id=id)
-    if request.user.role == '3' and request.user.working_at is not loan.library:
+    if request.user.role == '3' and request.user.working_at != loan.library:
         return Response({
             "status": "error",
             "data": "Librarian doesn't have access to this Library!"
@@ -329,7 +329,9 @@ def receiveLoan(request, id):
     loan.save()
     for book in loan.books.all():
         book.loaned = False
+        book.reserved = False
         book.save()
+    # TODO: Check WaitingList and create new bookloans if availiable
     return Response({
         "status": "success"
     }, status=status.HTTP_200_OK)
@@ -353,7 +355,7 @@ def updateLoan(request, id, fine):
         This function expects user to be logged in.
     """
     loan = get_object_or_404(BookLoan, id=id)
-    if request.user.role == '3' and request.user.working_at is not loan.library:
+    if request.user.role == '3' and request.user.working_at != loan.library:
         return Response({
             "status": "error",
             "data": "Librarian doesn't have access to this Library!"
