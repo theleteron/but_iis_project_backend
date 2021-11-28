@@ -272,6 +272,8 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
                 wait_list.books = book_ids
                 wait_list.library = library
                 wait_list.user = validated_data['creator']
+                wait_list.date_from = validated_data['date_from']
+                wait_list.date_to = validated_data['date_to']
                 wait_list.save()
                 raise ValidationError("Already reserved or loaned! Added to waitlist!")
             else:
