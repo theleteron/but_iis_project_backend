@@ -265,6 +265,7 @@ def voteEnd(request, id):
     new_voting = Voting()
     new_voting.library = voting.library
     new_voting.publication = voting.publication
+    new_voting.votes = 0
     new_voting.save()
     return Response({
         "status": "success",

@@ -462,6 +462,7 @@ def associatePublicationWithLibrary(request, id, lid):
     new_voting = Voting()
     new_voting.library = library
     new_voting.publication = publication
+    new_voting.votes = 0
     new_voting.save()
     return Response({
         "status": "success",
