@@ -336,11 +336,11 @@ def setOpeningHoursLibrary(request, id):
         Function that allows user with an Administrator or Librarian role to add opening hours to a library.
     """
     library = get_object_or_404(Library, id=id)
-    if request.user == '3' and request.user.working_at is not library:
+    if request.user.role == '3' and request.user.working_at != library:
         return Response({
             "status": "error",
             "details": "Selected user is not a Librarian responsible for this library."
-        }, status=status.HTTP_400_BAD_REQUEST)
+        }, status=status.HTTP_401_UNAUTHORIZED)
     serializer = OpeningHoursCreateSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(library=library)
@@ -353,7 +353,7 @@ def setOpeningHoursLibrary(request, id):
     }, status=status.HTTP_400_BAD_REQUEST)
 # ==================================================================================================
 
-# ================================= Add opening hours to a Library =================================
+# ================================= Get opening hours to a Library =================================
 """
     Schema for the possisble responses to a request for an association of librarian to a library
 """

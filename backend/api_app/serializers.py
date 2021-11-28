@@ -202,8 +202,12 @@ class OpeningHoursCreateSerializer(serializers.ModelSerializer):
         closes = validated_data.pop('close_time', None)
         if len(days) != len(opens) or len(days) != len(closes):
             raise ValueError  
-        opening_hours = OpeningHours()
-        opening_hours.library = validated_data['library']
+        exists = OpeningHours.objects.get(library=validated_data['library'].id)
+        if exists is None:
+            opening_hours = OpeningHours()
+            opening_hours.library = validated_data['library']
+        else:
+            opening_hours = exists
         opening_hours.day = days
         opening_hours.open_time = opens
         opening_hours.close_time = closes
