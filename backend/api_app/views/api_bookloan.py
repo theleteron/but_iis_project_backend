@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_condition import And, Or
 from rest_framework import status
@@ -8,7 +9,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from api_app.models import BookLoan
 from api_app.permissions import IsAdministrator, IsLibrarian
-from api_app.serializers import BookLoanCreateSerializer, BookLoanSerializer
+from api_app.serializers import BookLoanCreateSerializer, BookLoanSerializer, WaitingListSerializer
 
 """
     Schema for the possisble responses to a request for an bookloan information
@@ -224,10 +225,16 @@ def createLoan(request):
     """
     serializer = BookLoanCreateSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save(creator=request.user)
-        return Response({
-           "status": "success"
-        }, status=status.HTTP_200_OK)
+        try:
+            serializer.save(creator=request.user)
+        except ValidationError:
+            return Response({
+                "status": "waiting"
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "status": "success"
+            }, status=status.HTTP_200_OK)
     else:
         return Response({
             "status": "error",

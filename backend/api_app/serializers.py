@@ -1,8 +1,7 @@
 from django.core.exceptions import ValidationError
-from django.db.models.expressions import Value
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from .models import Account, Library, OpeningHours, Publication, Book, PublicationOrder, BookOrder, BookLoan, Voting
+from .models import Library, OpeningHours, Publication, Book, PublicationOrder, BookOrder, BookLoan, Voting, WaitingList
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from django.conf import settings
@@ -212,6 +211,36 @@ class OpeningHoursCreateSerializer(serializers.ModelSerializer):
 
 # =====================================================================================================================
 
+class WaitingListSerializer(serializers.ModelSerializer):
+    date_from               = serializers.DateTimeField()
+    date_to                 = serializers.DateTimeField()
+    books                   = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+
+    class Meta:
+        model = WaitingList
+        fields = (
+            'date_from',
+            'date_to',
+            'books'
+        )
+    
+    def create(self, validated_data):
+        wait_list = WaitingList()
+        wait_list.books = validated_data.pop('books', None)
+        library = None
+        book_ids = validated_data.pop('books',None)
+        for id in book_ids:
+            book = get_object_or_404(Book, id=id)
+            if library is None:
+                library = book.library
+            if library.id != book.library.id:
+                raise ValueError
+        wait_list.library = library
+        wait_list.user = validated_data['creator']
+        wait_list.save()
+        return wait_list
 
 # BookLoanAPI =========================================================================================================
 # Serializer for creating Bookloan
@@ -235,7 +264,6 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
         book_loan.user = validated_data['creator']
         book_loan.date_from = validated_data['date_from']
         book_loan.date_to = validated_data['date_to']
-        book_loan.save()
         book_ids = validated_data.pop('books',None)
         # Check if all the books are from the same library
         library = None
@@ -243,7 +271,7 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
             book = get_object_or_404(Book, id=id)
             if library is None:
                 library = book.library
-            if library is not book.library:
+            if library.id != book.library.id:
                 raise ValueError
         book_loan.library = library
         book_loan.save()
@@ -252,7 +280,12 @@ class BookLoanCreateSerializer(serializers.ModelSerializer):
             book = get_object_or_404(Book, id=id)
             if book.loaned or book.reserverd:
                 book_loan.delete()
-                raise ValueError
+                wait_list = WaitingList()
+                wait_list.books = book_ids
+                wait_list.library = library
+                wait_list.user = validated_data['creator']
+                wait_list.save()
+                raise ValidationError("Already reserved or loaned! Added to waitlist!")
             else:
                 book.reserverd = True
                 book_loan.books.add(book)

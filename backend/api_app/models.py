@@ -175,6 +175,14 @@ class BookLoan(models.Model):
     fine                = models.IntegerField(default=0)
     books               = models.ManyToManyField(Book)
 
+class WaitingList(models.Model):
+    user                = models.ForeignKey('Account', related_name="creator_waiting", on_delete=models.RESTRICT)
+    library             = models.ForeignKey('Library', on_delete=models.RESTRICT)
+    date_created        = models.DateTimeField(auto_now_add=True)
+    books               = ArrayField(
+        models.IntegerField()
+    )
+
 class Voting(models.Model):
     library             = models.ForeignKey('Library', on_delete=models.CASCADE)
     publication         = models.ForeignKey('Publication', on_delete=models.RESTRICT)
