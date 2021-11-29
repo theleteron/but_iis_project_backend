@@ -77,7 +77,7 @@ urlpatterns = [
     path('library/', getLibrary),
     path('library/<int:id>/', getLibrary),
     path('library/create/', createLibrary),
-    path('library/<int:id>/update', updateLibrary),
+    path('library/<int:id>/update/', updateLibrary),
     path('library/<int:id>/update/openinghours/', setOpeningHoursLibrary),
     path('library/<int:id>/associate/<int:uid>/', associateLibrarianToLibrary),
     path('library/<int:id>/open/', getOpeningHoursLibrary),
