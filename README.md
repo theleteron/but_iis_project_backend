@@ -9,6 +9,7 @@ Example of `.env` file (without comments - text after #)
 ```bash
 DEBUG=1                                             # Django that we want to display detailed errors (dev env)
 SECRET_KEY=foo                                      # Secret key
+ADMIN_KEY=bar                                       # Admin key
 DJANGO_ALLOWED_HOSTS="localhost 127.0.0.1 [::1]"    # Accept connection from
 SQL_ENGINE="django.db.backends.postgresql"          
 SQL_DATABASE="iis_library"                          # Database name

@@ -1,8 +1,10 @@
 from requests import post
+ADMIN_KEY = "bar"
+API_URL = "https://iis.czleteron.net/"
 
 # Register Administrator
 result = post(
-    url="https://iis.czleteron.net/api/auth/register/",
+    url=API_URL + "api/auth/register/",
     data={
         "username": "admin",
         "email": "admin@iis.czleteron.net",
@@ -18,7 +20,7 @@ result = post(
 print(result)
 # Register Librarian
 result = post(
-    url="https://iis.czleteron.net/api/auth/register/",
+    url=API_URL + "api/auth/register/",
     data={
         "username": "librarian",
         "email": "librarian@iis.czleteron.net",
@@ -34,7 +36,7 @@ result = post(
 print(result)
 # Register Distributor
 result = post(
-    url="https://iis.czleteron.net/api/auth/register/",
+    url=API_URL + "api/auth/register/",
     data={
         "username": "distributor",
         "email": "distributor@iis.czleteron.net",
@@ -50,7 +52,7 @@ result = post(
 print(result)
 # Register Registred
 result = post(
-    url="https://iis.czleteron.net/api/auth/register/",
+    url=API_URL + "api/auth/register/",
     data={
         "username": "registred",
         "email": "registred@iis.czleteron.net",
@@ -66,7 +68,7 @@ result = post(
 print(result)
 # Login Administrator
 result = post(
-    url="https://iis.czleteron.net/api/auth/login/",
+    url=API_URL + "api/auth/login/",
     json={
         "username": "admin@iis.czleteron.net",
         "password": "iis_admin"
@@ -79,9 +81,9 @@ token = 'Token ' + result.json()['token']
 print(result)
 # Make Administrator
 result = post(
-    url="https://iis.czleteron.net/api/admin/setrole/administrator/",
+    url=API_URL + "api/admin/setrole/administrator/",
     json={
-        "key": "4Xb3cKF0JQL5R8BOqv9vqSGo5MEWIVQPlrTsqMKtin3RK7G6I1BG6mYT4kky6G0R62E15G7TQi4qR3w09oJZBA8co8Om714a3pGGWZhCRSB5A673EHP0BG4v6U42jO00"
+        "key": ADMIN_KEY
     },
     headers={
         'Content-Type': 'application/json',
@@ -91,7 +93,7 @@ result = post(
 print(result)
 # Make Librarian
 result = post(
-    url="https://iis.czleteron.net/api/admin/setrole/2/librarian/",
+    url=API_URL + "api/admin/setrole/2/librarian/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -100,7 +102,7 @@ result = post(
 print(result)
 # Make Distributor
 result = post(
-    url="https://iis.czleteron.net/api/admin/setrole/3/distributor/",
+    url=API_URL + "api/admin/setrole/3/distributor/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -109,7 +111,7 @@ result = post(
 print(result)
 # Create Library
 result = post(
-    url="https://iis.czleteron.net/api/library/create/",
+    url=API_URL + "api/library/create/",
     json={
         "name": "Městská knihovna v Praze",
         "description": "Barrandov",
@@ -124,7 +126,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/library/create/",
+    url=API_URL + "api/library/create/",
     json={
         "name": "Městská knihovna Břeclav",
         "description": "MkB",
@@ -139,7 +141,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/library/create/",
+    url=API_URL + "/api/library/create/",
     json={
         "name": "Městská knihovna Znojmo",
         "description": "Městská knihovna ve Znojmě",
@@ -155,7 +157,7 @@ result = post(
 print(result)
 # Create Publication
 result = post(
-    url="https://iis.czleteron.net/api/publication/create/",
+    url=API_URL + "api/publication/create/",
     json={
         "name": "The Fellowship of the Ring",
         "series": "The Lord of the Rings",
@@ -176,7 +178,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/publication/create/",
+    url=API_URL + "api/publication/create/",
     json={
         "name": "The Return of the King",
         "series": "The Lord of the Rings",
@@ -197,7 +199,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/publication/create/",
+    url=API_URL + "api/publication/create/",
     json={
         "name": "Karanténa s moderním fotrem",
         "series": "-",
@@ -219,7 +221,7 @@ result = post(
 print(result)
 # Associate Publication with Library
 result = post(
-    url="https://iis.czleteron.net/api/publication/1/associate/1",
+    url=API_URL + "api/publication/1/associate/1",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -227,7 +229,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/publication/1/associate/2",
+    url=API_URL + "api/publication/1/associate/2",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -235,7 +237,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/publication/2/associate/1",
+    url=API_URL + "api/publication/2/associate/1",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -243,7 +245,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/publication/3/associate/1",
+    url=API_URL + "api/publication/3/associate/1",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -252,7 +254,7 @@ result = post(
 print(result)
 # Order publications
 result = post(
-    url="https://iis.czleteron.net/api/order/create/",
+    url=API_URL + "api/order/create/",
     json={
         "publication": 1,
         "library": 1,
@@ -269,7 +271,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/order/create/",
+    url=API_URL + "api/order/create/",
     json={
         "publication": 2,
         "library": 1,
@@ -286,7 +288,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/order/create/",
+    url=API_URL + "api/order/create/",
     json={
         "publication": 1,
         "library": 2,
@@ -303,7 +305,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/order/create/",
+    url=API_URL + "api/order/create/",
     json={
         "publication": 3,
         "library": 3,
@@ -321,7 +323,7 @@ result = post(
 print(result)
 # Deliver orders
 result = post(
-    url="https://iis.czleteron.net/api/order/1/deliver/",
+    url=API_URL + "api/order/1/deliver/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -329,7 +331,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/order/2/deliver/",
+    url=API_URL + "api/order/2/deliver/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -337,7 +339,7 @@ result = post(
 )
 print(result)
 result = post(
-    url="https://iis.czleteron.net/api/order/4/deliver/",
+    url=API_URL + "api/order/4/deliver/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
