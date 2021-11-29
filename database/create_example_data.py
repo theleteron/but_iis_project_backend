@@ -130,7 +130,7 @@ result = post(
 print(str(result.status_code) + " Make Administrator [" + result.text + "] ")
 # Make Librarian
 result = post(
-    url=API_URL + "api/admin/setrole/2/librarian/",
+    url=API_URL + "api/admin/setrole/4/librarian/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
