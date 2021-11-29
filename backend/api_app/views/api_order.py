@@ -8,7 +8,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from api_app.models import Book, BookOrder, PublicationOrder
 from api_app.permissions import IsAdministrator, IsDistributor, IsLibrarian
-from api_app.serializers import PublicationOrderCreateByAdmin, PublicationOrderCreateByLibrarian, PublicationOrderSerializer
+from api_app.serializers import BookOrderSerializer, PublicationOrderCreateByAdmin, PublicationOrderCreateByLibrarian, PublicationOrderSerializer
 
 """
     Schema for the possisble responses to a request for a order information
@@ -61,10 +61,13 @@ def getOrder(request, id=None):
     """
     if id:
         item = get_object_or_404(PublicationOrder, pk=id)
+        related = get_object_or_404(BookOrder, publication_order=id)
         serializer = PublicationOrderSerializer(item)
+        serializer_r = BookOrderSerializer(related)
         return Response({
             "status": "success",
-            "data": serializer.data
+            "data": serializer.data,
+            "data_details": serializer_r.data
         }, status=status.HTTP_200_OK)
 
     items = PublicationOrder.objects.all()
