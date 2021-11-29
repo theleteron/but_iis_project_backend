@@ -298,7 +298,7 @@ result = post(
         "ISBN": "9788024945798",
         "date_of_publication": "2021-04-20T17:25:28.629000Z",
         "publisher": "Ikar(ČR)",
-        "genre": "humor",
+        "genre": "Humor",
         "pages": 208,
         "tags": "karanténa best covid"
     },
@@ -342,7 +342,7 @@ result = post(
         "ISBN": "9788027701285",
         "date_of_publication": "2021-11-08T17:25:28.629000Z",
         "publisher": "Vendeta",
-        "genre": "detektivní",
+        "genre": "Detektivní",
         "pages": 368,
         "tags": "Beletrie horor thriller daddy"
     },
