@@ -52,22 +52,6 @@ result = post(
     }
 )
 print(str(result.status_code) + " Register Registered [" + result.text + "] ")
-# Register Librarian 2
-result = post(
-    url=API_URL + "api/auth/register/",
-    data={
-        "username": "librarian2",
-        "email": "librarian2@iis.czleteron.net",
-        "first_name": "IIS",
-        "last_name": "Librarian2",
-        "city": "Brno",
-        "street": "Palackeho 12/1",
-        "zip_code": "61201",
-        "country": "Czechia",
-        "password": "iis_librarian2"
-    }
-)
-print(str(result.status_code) + " Register Librarian 2 [" + result.text + "] ")
 # Register Librarian 1
 result = post(
     url=API_URL + "api/auth/register/",
@@ -84,6 +68,22 @@ result = post(
     }
 )
 print(str(result.status_code) + " Register Librarian 1 [" + result.text + "] ")
+# Register Librarian 2
+result = post(
+    url=API_URL + "api/auth/register/",
+    data={
+        "username": "librarian2",
+        "email": "librarian2@iis.czleteron.net",
+        "first_name": "IIS",
+        "last_name": "Librarian2",
+        "city": "Brno",
+        "street": "Palackeho 12/1",
+        "zip_code": "61201",
+        "country": "Czechia",
+        "password": "iis_librarian2"
+    }
+)
+print(str(result.status_code) + " Register Librarian 2 [" + result.text + "] ")
 # Register Librarian 3
 result = post(
     url=API_URL + "api/auth/register/",
