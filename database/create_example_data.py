@@ -216,7 +216,7 @@ print(result)
 
 # Associate librarians with libraries #################################################################
 result = post(
-    url=API_URL + "api/library/1/associate/3",
+    url=API_URL + "api/library/1/associate/3/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -225,7 +225,7 @@ result = post(
 print(result)
 
 result = post(
-    url=API_URL + "api/library/2/associate/5",
+    url=API_URL + "api/library/2/associate/5/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -234,7 +234,7 @@ result = post(
 print(result)
 
 result = post(
-    url=API_URL + "api/library/3/associate/6",
+    url=API_URL + "api/library/3/associate/6/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -772,7 +772,7 @@ print(result)
 
 # Rating publications #################################################################################
 result = post(
-    url="https://iis.czleteron.net/api/publication/1/rate/9",
+    url="https://iis.czleteron.net/api/publication/1/rate/9/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token3
@@ -781,7 +781,7 @@ result = post(
 print(result)
 
 result = post(
-    url="https://iis.czleteron.net/api/publication/1/rate/8",
+    url="https://iis.czleteron.net/api/publication/1/rate/8/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token4
@@ -790,7 +790,7 @@ result = post(
 print(result)
 
 result = post(
-    url="https://iis.czleteron.net/api/publication/3/rate/6",
+    url="https://iis.czleteron.net/api/publication/3/rate/6/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token4
@@ -799,7 +799,7 @@ result = post(
 print(result)
 
 result = post(
-    url="https://iis.czleteron.net/api/publication/3/rate/0",
+    url="https://iis.czleteron.net/api/publication/3/rate/0/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -808,7 +808,7 @@ result = post(
 print(result)
 
 result = post(
-    url="https://iis.czleteron.net/api/publication/3/rate/2",
+    url="https://iis.czleteron.net/api/publication/3/rate/2/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token2
