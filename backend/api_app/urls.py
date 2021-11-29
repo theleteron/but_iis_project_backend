@@ -115,11 +115,14 @@ urlpatterns = [
     path('bookloan/<int:id>/loan/', confirmLoan),
     path('bookloan/<int:id>/receive/', receiveLoan),
     path('bookloan/<int:id>/fine/<int:fine>/', updateLoan),
+    #path('bookloan/<int:id>/extend/', extendLoan),
+    path('bookloan/<int:id>/extend/<int:days>/', extendLoan),
     # Voting
     path('voting/', getVoting),
     path('voting/<int:id>/', getVoting),
     path('voting/library/<int:id>/', getLibraryVoting),
     path('voting/create/', createVoting),
     path('voting/vote/<int:id>/', vote),
-    path('voting/end/<int:id>/', voteEnd)
+    path('voting/end/<int:id>/', voteEnd),
+    path('voting/delete/<int:id>/', voteDelete),
 ]

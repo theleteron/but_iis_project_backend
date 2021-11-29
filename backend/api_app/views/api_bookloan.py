@@ -1,3 +1,4 @@
+import datetime
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_condition import And, Or
@@ -430,6 +431,55 @@ def updateLoan(request, id, fine):
             "data": "Librarian doesn't have access to this Library!"
         }, status=status.HTTP_401_UNAUTHORIZED)
     loan.fine = loan.fine + fine
+    loan.save()
+    return Response({
+        "status": "success"
+    }, status=status.HTTP_200_OK)
+# ==================================================================================================
+
+# ======================================= Extend bookloan ==========================================
+"""
+    Settings for Swagger OpenAPI documentation
+"""
+@swagger_auto_schema(
+    tags=["Book Loan"],
+    method="POST",
+    operation_description="Extend loan by X days",
+    responses=bookLoanPostResponses
+)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def extendLoan(request, id, days):
+    """
+        Function that allows user with Administrator, Librarian role or owner of loan to extend it by X days.
+        This function expects user to be logged in.
+    """
+    loan = get_object_or_404(BookLoan, id=id)
+    if days > 30:
+        return Response({
+            "status": "error",
+            "data": "Loan can be extended by max of 30 days!"
+        }, status=status.HTTP_400_BAD_REQUEST)
+    if loan.extension_to and (request.user.role != '4' or request.user.role != '3'):
+        return Response({
+            "status": "error",
+            "data": "Loan can be extended just once!"
+        }, status=status.HTTP_400_BAD_REQUEST)
+    if request.user.role == '3' and request.user.working_at != loan.library:
+        return Response({
+            "status": "error",
+            "data": "Librarian doesn't have access to this Library!"
+        }, status=status.HTTP_401_UNAUTHORIZED)
+    if (request.user.role == '1' or request.user.role == '2') and loan.user != request.user:
+        return Response({
+            "status": "error",
+            "data": "User is not owner of this book loan!"
+        }, status=status.HTTP_401_UNAUTHORIZED)
+    if loan.extension_to:
+        original_date = loan.extension_to
+    else:
+        original_date = loan.date_to
+    loan.extension_to = original_date + datetime.timedelta(days=days)
     loan.save()
     return Response({
         "status": "success"
