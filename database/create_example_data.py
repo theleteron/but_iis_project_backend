@@ -1,7 +1,7 @@
 from requests import post
 
 ADMIN_KEY = "bar"
-API_URL = "https://iis.czleteron.net/"
+API_URL = API_URL + ""
 
 # Register users ######################################################################################
 # Register Administrator
@@ -553,7 +553,7 @@ print(str(result.status_code) + " Deliver order 5 [" + result.text + "] ")
 
 # Create book loans for multiple users ################################################################
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/create/",
+    url=API_URL + "api/bookloan/create/",
     json={
         "date_from": "2021-11-29T16:10:18.691Z",
         "date_to": "2021-12-29T16:10:18.691Z",
@@ -569,7 +569,7 @@ result = post(
 print(str(result.status_code) + " Create book loan 1 as admin [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/create/",
+    url=API_URL + "api/bookloan/create/",
     json={
         "date_from": "2021-11-29T16:10:18.691Z",
         "date_to": "2021-12-29T16:10:18.691Z",
@@ -598,7 +598,7 @@ token2 = 'Token ' + result.json()['token']
 print(str(result.status_code) + " Log in as distributor [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/create/",
+    url=API_URL + "api/bookloan/create/",
     json={
         "date_from": "2021-11-29T16:10:18.691Z",
         "date_to": "2021-12-29T16:10:18.691Z",
@@ -627,7 +627,7 @@ token3 = 'Token ' + result.json()['token']
 print(str(result.status_code) + " Log in as user [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/create/",
+    url=API_URL + "api/bookloan/create/",
     json={
         "date_from": "2021-11-29T16:10:18.691Z",
         "date_to": "2021-12-29T16:10:18.691Z",
@@ -656,7 +656,7 @@ token4 = 'Token ' + result.json()['token']
 print(str(result.status_code) + " Log in as librarian 1 [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/create/",
+    url=API_URL + "api/bookloan/create/",
     json={
         "date_from": "2021-11-29T16:10:18.691Z",
         "date_to": "2021-12-29T16:10:18.691Z",
@@ -687,7 +687,7 @@ token5 = 'Token ' + result.json()['token']
 print(str(result.status_code) + " Log in as librarian 2 [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/create/",
+    url=API_URL + "api/bookloan/create/",
     json={
         "date_from": "2021-11-29T16:10:18.691Z",
         "date_to": "2021-12-29T16:10:18.691Z",
@@ -716,7 +716,7 @@ token6 = 'Token ' + result.json()['token']
 print(str(result.status_code) + " Log in as librarian 3 [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/create/",
+    url=API_URL + "api/bookloan/create/",
     json={
         "date_from": "2021-11-29T16:10:18.691Z",
         "date_to": "2021-12-29T16:10:18.691Z",
@@ -734,7 +734,7 @@ print(str(result.status_code) + " Create book loan 7 as librarian 3 [" + result.
 
 # Loan books as librarians ############################################################################
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/1/loan/",
+    url=API_URL + "api/bookloan/1/loan/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token4
@@ -743,7 +743,7 @@ result = post(
 print(str(result.status_code) + " Loan book loan 1 as librarian 1 [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/2/loan/",
+    url=API_URL + "api/bookloan/2/loan/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token5
@@ -752,7 +752,7 @@ result = post(
 print(str(result.status_code) + " Loan book loan 2 as librarian 2 [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/3/loan/",
+    url=API_URL + "api/bookloan/3/loan/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token4
@@ -761,7 +761,7 @@ result = post(
 print(str(result.status_code) + " Loan book loan 3 as librarian 1 [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/bookloan/4/loan/",
+    url=API_URL + "api/bookloan/4/loan/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token4
@@ -772,7 +772,7 @@ print(str(result.status_code) + " Loan book loan 4 as librarian 1 [" + result.te
 
 # Rating publications #################################################################################
 result = post(
-    url="https://iis.czleteron.net/api/publication/1/rate/9/",
+    url=API_URL + "api/publication/1/rate/9/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token3
@@ -781,7 +781,7 @@ result = post(
 print(str(result.status_code) + " Rate publication 1 as user [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/publication/1/rate/8/",
+    url=API_URL + "api/publication/1/rate/8/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token4
@@ -790,7 +790,7 @@ result = post(
 print(str(result.status_code) + " Rate publication 1 as librarian 1 [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/publication/3/rate/6/",
+    url=API_URL + "api/publication/3/rate/6/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token4
@@ -799,7 +799,7 @@ result = post(
 print(str(result.status_code) + " Rate publication 3 as librarian 1 [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/publication/3/rate/0/",
+    url=API_URL + "api/publication/3/rate/0/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -808,7 +808,7 @@ result = post(
 print(str(result.status_code) + " Rate publication 3 as administrator [" + result.text + "] ")
 
 result = post(
-    url="https://iis.czleteron.net/api/publication/3/rate/2/",
+    url=API_URL + "api/publication/3/rate/2/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token2
