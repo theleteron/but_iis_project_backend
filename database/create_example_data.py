@@ -19,7 +19,7 @@ result = post(
         "password": "iis_admin"
     }
 )
-print(result)
+print(result.text + "Register Administrator [" + str(result.status_code) + "] ")
 # Register Librarian 1
 result = post(
     url=API_URL + "api/auth/register/",
@@ -35,7 +35,7 @@ result = post(
         "password": "iis_librarian"
     }
 )
-print(result)
+print(result.text + "Register Librarian 1 [" + str(result.status_code) + "] ")
 # Register Distributor
 result = post(
     url=API_URL + "api/auth/register/",
@@ -51,8 +51,8 @@ result = post(
         "password": "iis_distributor"
     }
 )
-print(result)
-# Register Registred
+print(result.text + "Register Distributor [" + str(result.status_code) + "] ")
+# Register Registered
 result = post(
     url=API_URL + "api/auth/register/",
     data={
@@ -67,7 +67,7 @@ result = post(
         "password": "iis_registred"
     }
 )
-print(result)
+print(result.text + "Register Registered [" + str(result.status_code) + "] ")
 # Register Librarian 2
 result = post(
     url=API_URL + "api/auth/register/",
@@ -83,7 +83,7 @@ result = post(
         "password": "iis_librarian2"
     }
 )
-print(result)
+print(result.text + "Register Librarian 2 [" + str(result.status_code) + "] ")
 # Register Librarian 3
 result = post(
     url=API_URL + "api/auth/register/",
@@ -99,7 +99,7 @@ result = post(
         "password": "iis_librarian3"
     }
 )
-print(result)
+print(result.text + "Register Librarian 3 [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # Role setup ##########################################################################################
@@ -115,7 +115,7 @@ result = post(
     }
 )
 token = 'Token ' + result.json()['token']
-print(result)
+print(result.text + "Login Administrator [" + str(result.status_code) + "] ")
 # Make Administrator
 result = post(
     url=API_URL + "api/admin/setrole/administrator/",
@@ -127,7 +127,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Make Administrator [" + str(result.status_code) + "] ")
 # Make Librarian
 result = post(
     url=API_URL + "api/admin/setrole/2/librarian/",
@@ -136,7 +136,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Make Librarian [" + str(result.status_code) + "] ")
 # Make Librarian 2
 result = post(
     url=API_URL + "api/admin/setrole/5/librarian/",
@@ -145,7 +145,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Make Librarian 2 [" + str(result.status_code) + "] ")
 # Make Librarian 3
 result = post(
     url=API_URL + "api/admin/setrole/6/librarian/",
@@ -154,7 +154,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Make Librarian 3 [" + str(result.status_code) + "] ")
 # Make Distributor
 result = post(
     url=API_URL + "api/admin/setrole/3/distributor/",
@@ -163,7 +163,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Make Distributor [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # Create of libraries #################################################################################
@@ -181,7 +181,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create library 1 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/library/create/",
     json={
@@ -196,7 +196,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create library 2 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "/api/library/create/",
     json={
@@ -211,7 +211,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create library 3 [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # Associate librarians with libraries #################################################################
@@ -222,7 +222,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate librarian 1 with library 1 [" + str(result.status_code) + "] ")
 
 result = post(
     url=API_URL + "api/library/2/associate/5/",
@@ -231,7 +231,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate librarian 2 with library 2 [" + str(result.status_code) + "] ")
 
 result = post(
     url=API_URL + "api/library/3/associate/6/",
@@ -240,7 +240,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate librarian 3 with library 3 [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # Create publications & add them to libraries #########################################################
@@ -264,7 +264,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create publication 1 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/publication/create/",
     json={
@@ -285,7 +285,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create publication 2 [" + str(result.status_code) + "] ")
 
 result = post(
     url=API_URL + "api/publication/create/",
@@ -307,7 +307,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create publication 3 [" + str(result.status_code) + "] ")
 
 result = post(
     url=API_URL + "api/publication/create/",
@@ -329,7 +329,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create publication 4 [" + str(result.status_code) + "] ")
 
 result = post(
     url=API_URL + "api/publication/create/",
@@ -351,7 +351,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create publication 5 [" + str(result.status_code) + "] ")
 # Associate Publication with Library
 result = post(
     url=API_URL + "api/publication/1/associate/1/",
@@ -360,7 +360,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate Publication 1 with Library 1 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/publication/1/associate/2/",
     headers={
@@ -368,7 +368,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate Publication 1 with Library 2 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/publication/2/associate/1/",
     headers={
@@ -376,7 +376,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate Publication 2 with Library 1 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/publication/3/associate/1/",
     headers={
@@ -384,7 +384,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate Publication 3 with Library 1 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/publication/4/associate/3/",
     headers={
@@ -392,7 +392,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate Publication 4 with Library 3 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/publication/4/associate/1/",
     headers={
@@ -400,7 +400,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Associate Publication 4 with Library 1 [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # Order publications (& create voting) ################################################################
@@ -420,7 +420,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create order on Publication 1 for library 1 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/create/",
     json={
@@ -437,7 +437,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create order on Publication 2 for library 1 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/create/",
     json={
@@ -454,7 +454,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create order on Publication 1 for library 2 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/create/",
     json={
@@ -471,7 +471,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create order on Publication 3 for library 3 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/create/",
     json={
@@ -488,7 +488,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create order on Publication 4 for library 3 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/create/",
     json={
@@ -505,7 +505,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create order on Publication 4 for library 1 [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # deliver orders (& create books in libraries) ########################################################
@@ -516,7 +516,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Deliver order 1 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/2/deliver/",
     headers={
@@ -524,7 +524,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Deliver order 2 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/4/deliver/",
     headers={
@@ -532,7 +532,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Deliver order 3 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/5/deliver/",
     headers={
@@ -540,7 +540,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Deliver order 4 [" + str(result.status_code) + "] ")
 result = post(
     url=API_URL + "api/order/6/deliver/",
     headers={
@@ -548,7 +548,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Deliver order 5 [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # Create book loans for multiple users ################################################################
@@ -566,7 +566,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create book loan 1 as admin [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/create/",
@@ -582,7 +582,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Create book loan 2 as admin [" + str(result.status_code) + "] ")
 # Log in as distributor and create a book loan
 result = post(
     url=API_URL + "api/auth/login/",
@@ -595,7 +595,7 @@ result = post(
     }
 )
 token2 = 'Token ' + result.json()['token']
-print(result)
+print(result.text + "Log in as distributor [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/create/",
@@ -611,7 +611,7 @@ result = post(
         'Authorization': token2
     }
 )
-print(result)
+print(result.text + "Create book loan 3 as distributor [" + str(result.status_code) + "] ")
 # Log in as user and create a book loan
 result = post(
     url=API_URL + "api/auth/login/",
@@ -624,7 +624,7 @@ result = post(
     }
 )
 token3 = 'Token ' + result.json()['token']
-print(result)
+print(result.text + "Log in as user [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/create/",
@@ -640,7 +640,7 @@ result = post(
         'Authorization': token3
     }
 )
-print(result)
+print(result.text + "Create book loan 4 as user [" + str(result.status_code) + "] ")
 # Log in as librarian 1 and create a book loan
 result = post(
     url=API_URL + "api/auth/login/",
@@ -653,7 +653,7 @@ result = post(
     }
 )
 token4 = 'Token ' + result.json()['token']
-print(result)
+print(result.text + "Log in as librarian 1 [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/create/",
@@ -669,7 +669,7 @@ result = post(
         'Authorization': token4
     }
 )
-print(result)
+print(result.text + "Create book loan 5 as librarian 1 [" + str(result.status_code) + "] ")
 
 
 # Log in as librarian 2 and create a book loan
@@ -684,7 +684,7 @@ result = post(
     }
 )
 token5 = 'Token ' + result.json()['token']
-print(result)
+print(result.text + "Log in as librarian 2 [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/create/",
@@ -700,7 +700,7 @@ result = post(
         'Authorization': token5
     }
 )
-print(result)
+print(result.text + "Create book loan 6 as librarian 2 [" + str(result.status_code) + "] ")
 # Log in as librarian 3 and create a book loan
 result = post(
     url=API_URL + "api/auth/login/",
@@ -713,7 +713,7 @@ result = post(
     }
 )
 token6 = 'Token ' + result.json()['token']
-print(result)
+print(result.text + "Log in as librarian 3 [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/create/",
@@ -729,7 +729,7 @@ result = post(
         'Authorization': token6
     }
 )
-print(result)
+print(result.text + "Create book loan 7 as librarian 3 [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # Loan books as librarians ############################################################################
@@ -740,7 +740,7 @@ result = post(
         'Authorization': token4
     }
 )
-print(result)
+print(result.text + "Loan book loan 1 as librarian 1 [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/2/loan/",
@@ -749,7 +749,7 @@ result = post(
         'Authorization': token5
     }
 )
-print(result)
+print(result.text + "Loan book loan 2 as librarian 2 [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/3/loan/",
@@ -758,7 +758,7 @@ result = post(
         'Authorization': token4
     }
 )
-print(result)
+print(result.text + "Loan book loan 3 as librarian 1 [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/bookloan/4/loan/",
@@ -767,7 +767,7 @@ result = post(
         'Authorization': token4
     }
 )
-print(result)
+print(result.text + "Loan book loan 4 as librarian 1 [" + str(result.status_code) + "] ")
 #######################################################################################################
 
 # Rating publications #################################################################################
@@ -778,7 +778,7 @@ result = post(
         'Authorization': token3
     }
 )
-print(result)
+print(result.text + "Rate publication 1 as user [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/publication/1/rate/8/",
@@ -787,7 +787,7 @@ result = post(
         'Authorization': token4
     }
 )
-print(result)
+print(result.text + "Rate publication 1 as librarian 1 [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/publication/3/rate/6/",
@@ -796,7 +796,7 @@ result = post(
         'Authorization': token4
     }
 )
-print(result)
+print(result.text + "Rate publication 3 as librarian 1 [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/publication/3/rate/0/",
@@ -805,7 +805,7 @@ result = post(
         'Authorization': token
     }
 )
-print(result)
+print(result.text + "Rate publication 3 as administrator [" + str(result.status_code) + "] ")
 
 result = post(
     url="https://iis.czleteron.net/api/publication/3/rate/2/",
@@ -814,7 +814,7 @@ result = post(
         'Authorization': token2
     }
 )
-print(result)
+print(result.text + "Rate publication 3 as distributor [" + str(result.status_code) + "] ")
 #######################################################################################################
 # token - admin (id:1)
 # token2 - distributor (id:2)
