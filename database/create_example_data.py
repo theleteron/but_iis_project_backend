@@ -1,7 +1,9 @@
 from requests import post
+
 ADMIN_KEY = "bar"
 API_URL = "https://iis.czleteron.net/"
 
+# Register users ######################################################################################
 # Register Administrator
 result = post(
     url=API_URL + "api/auth/register/",
@@ -18,7 +20,7 @@ result = post(
     }
 )
 print(result)
-# Register Librarian
+# Register Librarian 1
 result = post(
     url=API_URL + "api/auth/register/",
     data={
@@ -66,6 +68,41 @@ result = post(
     }
 )
 print(result)
+# Register Librarian 2
+result = post(
+    url=API_URL + "api/auth/register/",
+    data={
+        "username": "librarian2",
+        "email": "librarian2@iis.czleteron.net",
+        "first_name": "IIS",
+        "last_name": "Librarian2",
+        "city": "Brno",
+        "street": "Palackeho 12/1",
+        "zip_code": "61201",
+        "country": "Czechia",
+        "password": "iis_librarian2"
+    }
+)
+print(result)
+# Register Librarian 3
+result = post(
+    url=API_URL + "api/auth/register/",
+    data={
+        "username": "librarian3",
+        "email": "librarian3@iis.czleteron.net",
+        "first_name": "IIS",
+        "last_name": "Librarian3",
+        "city": "Breclav",
+        "street": "Sady 28. rijna 27/21",
+        "zip_code": "69002",
+        "country": "Czechia",
+        "password": "iis_librarian3"
+    }
+)
+print(result)
+#######################################################################################################
+
+# Role setup ##########################################################################################
 # Login Administrator
 result = post(
     url=API_URL + "api/auth/login/",
@@ -100,6 +137,24 @@ result = post(
     }
 )
 print(result)
+# Make Librarian 2
+result = post(
+    url=API_URL + "api/admin/setrole/5/librarian/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+# Make Librarian 3
+result = post(
+    url=API_URL + "api/admin/setrole/6/librarian/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
 # Make Distributor
 result = post(
     url=API_URL + "api/admin/setrole/3/distributor/",
@@ -109,7 +164,9 @@ result = post(
     }
 )
 print(result)
-# Create Library
+#######################################################################################################
+
+# Create of libraries #################################################################################
 result = post(
     url=API_URL + "api/library/create/",
     json={
@@ -155,7 +212,38 @@ result = post(
     }
 )
 print(result)
-# Create Publication
+#######################################################################################################
+
+# Associate librarians with libraries #################################################################
+result = post(
+    url=API_URL + "api/library/1/associate/3",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+
+result = post(
+    url=API_URL + "api/library/2/associate/5",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+
+result = post(
+    url=API_URL + "api/library/3/associate/6",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+#######################################################################################################
+
+# Create publications & add them to libraries #########################################################
 result = post(
     url=API_URL + "api/publication/create/",
     json={
@@ -198,6 +286,7 @@ result = post(
     }
 )
 print(result)
+
 result = post(
     url=API_URL + "api/publication/create/",
     json={
@@ -219,9 +308,53 @@ result = post(
     }
 )
 print(result)
+
+result = post(
+    url=API_URL + "api/publication/create/",
+    json={
+        "name": " Tenkrát o Vánocích",
+        "series": "-",
+        "synopsis": "Vánoce jsou tradičně nazývány svátky klidu a míru, pro hrdiny povídek devíti soudobých českých autorů je to ovšem spíše období plné nejistot, pochyb a často také tíživé samoty. Ale kdy jindy věřit ve šťastné konce než právě o Vánocích?",
+        "authors": "Petra Soukupová, Petra Dvořáková, Anna Bolavá, Nellis Alice, Alena Mornštajnová, Marek Epstein",
+        "language": "CZ",
+        "ISBN": "9788024277677",
+        "date_of_publication": "2021-01-11T17:25:28.629000Z",
+        "publisher": "Listen",
+        "genre": "Próza",
+        "pages": 168,
+        "tags": "christmas x-max loneliness"
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+
+result = post(
+    url=API_URL + "api/publication/create/",
+    json={
+        "name": "Tátovy holky",
+        "series": "Charlotte Staffordová",
+        "synopsis": "Původně neměl v úmyslu zabíjet a ohrožovat staré lidi. Vyhledával jen příležitosti si s nimi promluvit a zavzpomínat. Jenže to by se nesměl vkrádat do jejich ložnic uprostřed noci a kromě vzpomínek a památečních předmětů je zbavovat i toho nejcennějšího, co jim ještě zůstává – posledních pár let života mezi dětmi a vnoučaty. V pátém díle příběhů detektivky Charlotte Staffordové se do hledáčku jejího vyšetřovacího týmu dostávají nezvaní noční hosté, ze kterých životní okolnosti, zklamání a tragédie učinily zločince. Charlotte Staffordová čelí jednomu z nejtěžších případů vůbec. Nepůjde v něm pouze o dopadení podezřelého dřív, než se vydá za svojí další obětí, ale také o porozumění vlastní životní cestě. Tento nevšední detektivní román nabízí víc než napětí a vykreslení postupu policejního vyšetřování. Poodhaluje čtenáři, že trpké zklamání a smutek ze ztráty milované osoby může jedince změnit natolik, že se nezastaví před ničím, aby zmírnil svoje trápení, a to i za cenu nejvyšší. Podle autorčiných vlastních slov ji k sepsání tohoto románu inspiroval skutečný osud pachatele, kterého během svojí dlouholeté kariéry u policie zadržela a jehož zločin nebyl v prvé řadě veden zlými pohnutkami, ale utkvělou představou o lásce až za hrob.",
+        "authors": "Sarah Flint",
+        "language": "CZ",
+        "ISBN": "9788027701285",
+        "date_of_publication": "T17:25:28.629000Z",
+        "publisher": "Vendeta",
+        "genre": "detektivní",
+        "pages": 368,
+        "tags": "Beletrie horor thriller daddy"
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
 # Associate Publication with Library
 result = post(
-    url=API_URL + "api/publication/1/associate/1",
+    url=API_URL + "api/publication/1/associate/1/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -229,7 +362,7 @@ result = post(
 )
 print(result)
 result = post(
-    url=API_URL + "api/publication/1/associate/2",
+    url=API_URL + "api/publication/1/associate/2/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -237,7 +370,7 @@ result = post(
 )
 print(result)
 result = post(
-    url=API_URL + "api/publication/2/associate/1",
+    url=API_URL + "api/publication/2/associate/1/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
@@ -245,14 +378,32 @@ result = post(
 )
 print(result)
 result = post(
-    url=API_URL + "api/publication/3/associate/1",
+    url=API_URL + "api/publication/3/associate/1/",
     headers={
         'Content-Type': 'application/json',
         'Authorization': token
     }
 )
 print(result)
-# Order publications
+result = post(
+    url=API_URL + "api/publication/4/associate/3/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+result = post(
+    url=API_URL + "api/publication/4/associate/1/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+#######################################################################################################
+
+# Order publications (& create voting) ################################################################
 result = post(
     url=API_URL + "api/order/create/",
     json={
@@ -321,7 +472,43 @@ result = post(
     }
 )
 print(result)
-# Deliver orders
+result = post(
+    url=API_URL + "api/order/create/",
+    json={
+        "publication": 4,
+        "library": 3,
+        "date_of_order": "2021-11-28T10:19:05.173Z",
+        "delivered": False,
+        "number_of_books": 20,
+        "price_per_book": 500,
+        "total_price": 10000
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+result = post(
+    url=API_URL + "api/order/create/",
+    json={
+        "publication": 4,
+        "library": 1,
+        "date_of_order": "2021-11-28T10:19:05.173Z",
+        "delivered": False,
+        "number_of_books": 40,
+        "price_per_book": 500,
+        "total_price": 20000
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+#######################################################################################################
+
+# deliver orders (& create books in libraries) ########################################################
 result = post(
     url=API_URL + "api/order/1/deliver/",
     headers={
@@ -346,4 +533,290 @@ result = post(
     }
 )
 print(result)
-# Bookloan
+result = post(
+    url=API_URL + "api/order/5/deliver/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+result = post(
+    url=API_URL + "api/order/6/deliver/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+#######################################################################################################
+
+# Create book loans for multiple users ################################################################
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/create/",
+    json={
+        "date_from": "2021-11-29T16:10:18.691Z",
+        "date_to": "2021-12-29T16:10:18.691Z",
+        "books": [
+            1, 11, 15
+        ]
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/create/",
+    json={
+        "date_from": "2021-11-29T16:10:18.691Z",
+        "date_to": "2021-12-29T16:10:18.691Z",
+        "books": [
+            26
+        ]
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+# Log in as distributor and create a book loan
+result = post(
+    url=API_URL + "api/auth/login/",
+    json={
+        "username": "admin@iis.czleteron.net",
+        "password": "iis_admin"
+    },
+    headers={
+        'Content-Type': 'application/json'
+    }
+)
+token2 = 'Token ' + result.json()['token']
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/create/",
+    json={
+        "date_from": "2021-11-29T16:10:18.691Z",
+        "date_to": "2021-12-29T16:10:18.691Z",
+        "books": [
+            2, 14
+        ]
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token2
+    }
+)
+print(result)
+# Log in as user and create a book loan
+result = post(
+    url=API_URL + "api/auth/login/",
+    json={
+        "username": "admin@iis.czleteron.net",
+        "password": "iis_admin"
+    },
+    headers={
+        'Content-Type': 'application/json'
+    }
+)
+token3 = 'Token ' + result.json()['token']
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/create/",
+    json={
+        "date_from": "2021-11-29T16:10:18.691Z",
+        "date_to": "2021-12-29T16:10:18.691Z",
+        "books": [
+            5, 13
+        ]
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token3
+    }
+)
+print(result)
+# Log in as librarian 1 and create a book loan
+result = post(
+    url=API_URL + "api/auth/login/",
+    json={
+        "username": "admin@iis.czleteron.net",
+        "password": "iis_admin"
+    },
+    headers={
+        'Content-Type': 'application/json'
+    }
+)
+token4 = 'Token ' + result.json()['token']
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/create/",
+    json={
+        "date_from": "2021-11-29T16:10:18.691Z",
+        "date_to": "2021-12-29T16:10:18.691Z",
+        "books": [
+            8
+        ]
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token4
+    }
+)
+print(result)
+
+
+# Log in as librarian 2 and create a book loan
+result = post(
+    url=API_URL + "api/auth/login/",
+    json={
+        "username": "admin@iis.czleteron.net",
+        "password": "iis_admin"
+    },
+    headers={
+        'Content-Type': 'application/json'
+    }
+)
+token5 = 'Token ' + result.json()['token']
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/create/",
+    json={
+        "date_from": "2021-11-29T16:10:18.691Z",
+        "date_to": "2021-12-29T16:10:18.691Z",
+        "books": [
+            1
+        ]
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token5
+    }
+)
+print(result)
+# Log in as librarian 3 and create a book loan
+result = post(
+    url=API_URL + "api/auth/login/",
+    json={
+        "username": "admin@iis.czleteron.net",
+        "password": "iis_admin"
+    },
+    headers={
+        'Content-Type': 'application/json'
+    }
+)
+token6 = 'Token ' + result.json()['token']
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/create/",
+    json={
+        "date_from": "2021-11-29T16:10:18.691Z",
+        "date_to": "2021-12-29T16:10:18.691Z",
+        "books": [
+            25
+        ]
+    },
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token6
+    }
+)
+print(result)
+#######################################################################################################
+
+# Loan books as librarians ############################################################################
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/1/loan/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token4
+    }
+)
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/2/loan/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token5
+    }
+)
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/3/loan/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token4
+    }
+)
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/bookloan/4/loan/",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token4
+    }
+)
+print(result)
+#######################################################################################################
+
+# Rating publications #################################################################################
+result = post(
+    url="https://iis.czleteron.net/api/publication/1/rate/9",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token3
+    }
+)
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/publication/1/rate/8",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token4
+    }
+)
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/publication/3/rate/6",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token4
+    }
+)
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/publication/3/rate/0",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token
+    }
+)
+print(result)
+
+result = post(
+    url="https://iis.czleteron.net/api/publication/3/rate/2",
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': token2
+    }
+)
+print(result)
+#######################################################################################################
+# token - admin (id:1)
+# token2 - distributor (id:2)
+# token3 - reg. user (id:2)
+# token4 - librarian (id:3), token5 - librarian 2 (id:5), token6 - librarian 3 (id:6)
