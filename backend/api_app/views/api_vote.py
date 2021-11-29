@@ -254,7 +254,7 @@ def vote(request, id):
 )
 @api_view(['PUT'])
 @permission_classes([And(IsAuthenticated, Or(IsAdministrator, IsLibrarian))])
-def voteDelete(request, id):
+def voteEnd(request, id):
     """
         Function that allows users with selected roles delete voting
     """
@@ -324,7 +324,7 @@ votingDeleteResponses = {
 )
 @api_view(['DELETE'])
 @permission_classes([And(IsAuthenticated, IsAdministrator)])
-def voteEnd(request, id):
+def voteDelete(request, id):
     """
         Function that allows administrator to end voting
     """
