@@ -746,10 +746,10 @@ result = post(
     url=API_URL + "api/bookloan/2/loan/",
     headers={
         'Content-Type': 'application/json',
-        'Authorization': token5
+        'Authorization': token4
     }
 )
-print(str(result.status_code) + " Loan book loan 2 as librarian 2 [" + result.text + "] ")
+print(str(result.status_code) + " Loan book loan 2 as librarian 1 [" + result.text + "] ")
 
 result = post(
     url=API_URL + "api/bookloan/3/loan/",
